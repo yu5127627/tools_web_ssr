@@ -4295,10 +4295,8 @@ function cloneVNode(vnode, extraProps, mergeRef = false) {
 function createTextVNode(text = " ", flag = 0) {
   return createVNode(Text, null, text, flag);
 }
-function createStaticVNode(content, numberOfNodes) {
-  const vnode = createVNode(Static, null, content);
-  vnode.staticCount = numberOfNodes;
-  return vnode;
+function createCommentVNode(text = "", asBlock = false) {
+  return asBlock ? (openBlock(), createBlock(Comment, null, text)) : createVNode(Comment, null, text);
 }
 function normalizeVNode(child) {
   if (child == null || typeof child === "boolean") {
@@ -4974,7 +4972,7 @@ function normalizeContainer(container) {
   }
   return container;
 }
-var App_vue_vue_type_style_index_0_lang = /* @__PURE__ */ (() => "\n* {\n  margin: 0;\n  padding: 0;\n}\n")();
+var App_vue_vue_type_style_index_0_lang = /* @__PURE__ */ (() => "\n* {\n  margin: 0;\n  padding: 0;\n}\nhtml,\nbody {\n  height: 100vh;\n  width: 100%;\n}\n#app {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n")();
 var _export_sfc = (sfc, props) => {
   const target = sfc.__vccOpts || sfc;
   for (const [key, val] of props) {
@@ -4985,19 +4983,19 @@ var _export_sfc = (sfc, props) => {
 const _sfc_main = {};
 function _sfc_render(_ctx, _cache) {
   const _component_router_view = resolveComponent("router-view");
-  return openBlock(), createBlock(_component_router_view, null, {
-    default: withCtx(({ Component }) => [
-      (openBlock(), createBlock(Suspense, null, {
-        default: withCtx(() => [
-          createBaseVNode("div", null, [
+  return openBlock(), createElementBlock("div", null, [
+    createVNode(_component_router_view, null, {
+      default: withCtx(({ Component }) => [
+        (openBlock(), createBlock(Suspense, null, {
+          default: withCtx(() => [
             (openBlock(), createBlock(resolveDynamicComponent(Component)))
-          ])
-        ]),
-        _: 2
-      }, 1024))
-    ]),
-    _: 1
-  });
+          ]),
+          _: 2
+        }, 1024))
+      ]),
+      _: 1
+    })
+  ]);
 }
 var App = /* @__PURE__ */ _export_sfc(_sfc_main, [["render", _sfc_render]]);
 const scriptRel = "modulepreload";
@@ -6638,18 +6636,26 @@ function extractChangingRecords(to, from) {
   }
   return [leavingRecords, updatingRecords, enteringRecords];
 }
-const pages = { "./pages/api.vue": () => true ? __vitePreload(() => import("./api.865e6442.js"), ["assets/api.865e6442.js","assets/api.fe34861f.css"]) : null, "./pages/home.vue": () => true ? __vitePreload(() => import("./home.b045820d.js"), []) : null };
+const pages = { "./pages/api.vue": () => true ? __vitePreload(() => import("./api.0fff8833.js"), ["assets/api.0fff8833.js","assets/api.fe34861f.css"]) : null, "./pages/home.vue": () => true ? __vitePreload(() => import("./home.8db3f845.js"), ["assets/home.8db3f845.js","assets/home.0a857d6c.css"]) : null };
 const routes = Object.keys(pages).map((path) => {
   const name = path.match(/\.\/pages(.*)\.vue$/)[1].toLowerCase();
   return {
-    path: name,
+    path: name === "/home" ? "/" : name,
     component: pages[path]
   };
 });
+const layoutPage = { "./layout/index.vue": () => true ? __vitePreload(() => import("./index.b0182f74.js"), ["assets/index.b0182f74.js","assets/index.fa856b78.css"]) : null };
+const layout = [
+  {
+    path: "/",
+    component: layoutPage["./layout/index.vue"],
+    children: routes
+  }
+];
 function createRouter() {
   return createRouter$1({
-    history: createWebHistory("/ssr/"),
-    routes
+    history: createWebHistory("/"),
+    routes: layout
   });
 }
 var isVue2 = false;
@@ -6995,4 +7001,4 @@ if (window && window.cache) {
 router.isReady().then(() => {
   app.mount("#app");
 });
-export { _export_sfc as _, defineComponent as a, createBaseVNode as b, createElementBlock as c, defineStore as d, ref as e, onServerPrefetch as f, onMounted as g, popScopeId as h, createStaticVNode as i, openBlock as o, pushScopeId as p, reactive as r, toDisplayString as t };
+export { _export_sfc as _, defineComponent as a, createBaseVNode as b, createElementBlock as c, defineStore as d, ref as e, onServerPrefetch as f, onMounted as g, popScopeId as h, createCommentVNode as i, createTextVNode as j, resolveComponent as k, createVNode as l, normalizeStyle as n, openBlock as o, pushScopeId as p, reactive as r, toDisplayString as t };

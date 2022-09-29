@@ -9,6 +9,17 @@
 </template>
 
 <style>
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100vh;
+  width: 100%;
+}
+
 #app {
   display: flex;
   align-items: center;

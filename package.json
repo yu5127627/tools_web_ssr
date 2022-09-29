@@ -23,6 +23,7 @@
   "dependencies": {
     "@vue/server-renderer": "^3.2.37",
     "axios": "^0.27.2",
+    "lodash": "^4.17.21",
     "mitt": "^3.0.0",
     "pinia": "^2.0.14",
     "vue": "^3.2.37",

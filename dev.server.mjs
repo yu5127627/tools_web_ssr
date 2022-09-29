@@ -8,7 +8,8 @@ const head = JSON.parse(fs.readFileSync(resolve('head.json'),'utf8'));
 const PORT = 8010;
 
 function renderHead(url, head) {
-  const page = url.replace('/', '');
+  let page = url.replace('/', '');
+  if (!page) page = '/';
   const { title,keywords,description } = head[page];
   return `
     <title>${title}</title>
@@ -55,7 +56,7 @@ export async function createServer(hmrPort) {
         .replace(`<!--app-html-->`, appHtml)
 
       // 数据传输
-      html += `<script>window.cache = ${JSON.stringify(store.state.value.cache)}</script>`
+      html += `<script>window.cache = ${store.state.value.cache?JSON.stringify(store.state.value.cache ):'{}'}</script>`
       res.status(200).set({ 'Content-Type': 'text/html' }).end(html)
     } catch (e) {
       vite && vite.ssrFixStacktrace(e)

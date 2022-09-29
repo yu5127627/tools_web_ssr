@@ -7,7 +7,8 @@ const app = express();
 const PORT = 8010;
 
 function renderHead(url, head) {
-  const page = url.replace('/', '');
+  let page = url.replace('/', '');
+  if (!page) page = '/';
   const { title,keywords,description } = head[page];
   return `
     <title>${title}</title>
@@ -23,9 +24,9 @@ const manifest = require('./ssr/client/ssr-manifest.json');
 app.use('/assets/',express.static('ssr/client/assets/'));
 
 
-app.all('/ssr/*', async (req, res) => {
+app.all('/*', async (req, res) => {
   try {
-    const url = req.url.replace('/ssr/', '/');
+    const url = req.url;
     const [appHtml, preloadLinks,store] = await render(url, manifest)
     const template = readFileSync(resolve('ssr/client/index.html'), 'utf-8');
     const headStr = renderHead(url, head);
@@ -35,7 +36,7 @@ app.all('/ssr/*', async (req, res) => {
       .replace(`<!--app-html-->`, appHtml)
 
     // 数据传输
-    html += `<script>window.cache = ${JSON.stringify(store.state.value.cache)}</script>`
+    html += `<script>window.cache = ${store.state.value.cache?JSON.stringify(store.state.value.cache ):'{}'}</script>`
     res.end(html)
   } catch (error) {
     console.log(error);
@@ -44,5 +45,5 @@ app.all('/ssr/*', async (req, res) => {
 })
 
 app.listen(PORT, () => {
-  console.log(`Prod server runing http://localhost:${PORT}/ssr/home`);
+  console.log(`Prod server runing http://localhost:${PORT}`);
 })

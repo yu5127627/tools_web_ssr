@@ -1,0 +1,17 @@
+.layout[data-v-1626efcc] {
+  width: 1160px;
+  min-height: 100vh;
+}
+.layout .main-container[data-v-1626efcc] {
+  min-height: 100vh;
+}
+.layout .page-footer[data-v-1626efcc] {
+  width: 1160px;
+  margin: 100px 0 20px;
+}
+.layout .page-footer p[data-v-1626efcc],
+.layout .page-footer a[data-v-1626efcc] {
+  font-size: 14px;
+  line-height: 24px;
+  text-align: center;
+}

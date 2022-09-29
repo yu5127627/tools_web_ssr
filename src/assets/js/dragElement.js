@@ -43,6 +43,7 @@ class DragElement {
           const offsetX = this.disLeft + diffX;
           if (offsetX > 470||offsetX < 10) return
           this.ele.style.left = this.disLeft + diffX + 'px';
+          emitter.emit('move-left', { left: offsetX-10   });
           this.isMove = false;
           this.ele.removeEventListener('mousemove', this.handleMove);
       })
