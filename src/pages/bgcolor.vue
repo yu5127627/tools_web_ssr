@@ -102,6 +102,8 @@ export default defineComponent({
         canvas.height = img.height;
         var ctx = canvas.getContext("2d");
         ctx.drawImage(img, 0, 0);
+        console.log(ctx.getImageData(0, 0, img.width, img.height));
+
         // const base64 = canvas.toDataURL("image/jpeg", rate);
         // imgSrc.value = base64;
         canvas.toBlob((blob) => {
@@ -109,7 +111,7 @@ export default defineComponent({
           const windowUrl = window.URL || window.webkitURL;
           currentFile.blobUrl = windowUrl.createObjectURL(blob)
           imgSrc.value = currentFile.blobUrl;
-        }, "image/jpeg", rate);
+        }, "image/jpeg");
       }
       img.onerror = function (error) {
         console.log(error);
