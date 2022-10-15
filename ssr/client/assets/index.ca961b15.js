@@ -54,7 +54,7 @@ function includeBooleanAttr(value) {
   return !!value || value === "";
 }
 function normalizeStyle(value) {
-  if (isArray(value)) {
+  if (isArray$1(value)) {
     const res = {};
     for (let i = 0; i < value.length; i++) {
       const item = value[i];
@@ -88,7 +88,7 @@ function normalizeClass(value) {
   let res = "";
   if (isString(value)) {
     res = value;
-  } else if (isArray(value)) {
+  } else if (isArray$1(value)) {
     for (let i = 0; i < value.length; i++) {
       const normalized = normalizeClass(value[i]);
       if (normalized) {
@@ -105,7 +105,7 @@ function normalizeClass(value) {
   return res.trim();
 }
 const toDisplayString = (val) => {
-  return isString(val) ? val : val == null ? "" : isArray(val) || isObject(val) && (val.toString === objectToString || !isFunction(val.toString)) ? JSON.stringify(val, replacer, 2) : String(val);
+  return isString(val) ? val : val == null ? "" : isArray$1(val) || isObject(val) && (val.toString === objectToString || !isFunction(val.toString)) ? JSON.stringify(val, replacer, 2) : String(val);
 };
 const replacer = (_key, val) => {
   if (val && val.__v_isRef) {
@@ -121,7 +121,7 @@ const replacer = (_key, val) => {
     return {
       [`Set(${val.size})`]: [...val.values()]
     };
-  } else if (isObject(val) && !isArray(val) && !isPlainObject$1(val)) {
+  } else if (isObject(val) && !isArray$1(val) && !isPlainObject(val)) {
     return String(val);
   }
   return val;
@@ -143,7 +143,7 @@ const remove = (arr, el) => {
 };
 const hasOwnProperty = Object.prototype.hasOwnProperty;
 const hasOwn = (val, key) => hasOwnProperty.call(val, key);
-const isArray = Array.isArray;
+const isArray$1 = Array.isArray;
 const isMap = (val) => toTypeString(val) === "[object Map]";
 const isSet = (val) => toTypeString(val) === "[object Set]";
 const isFunction = (val) => typeof val === "function";
@@ -158,9 +158,11 @@ const toTypeString = (value) => objectToString.call(value);
 const toRawType = (value) => {
   return toTypeString(value).slice(8, -1);
 };
-const isPlainObject$1 = (val) => toTypeString(val) === "[object Object]";
+const isPlainObject = (val) => toTypeString(val) === "[object Object]";
 const isIntegerKey = (key) => isString(key) && key !== "NaN" && key[0] !== "-" && "" + parseInt(key, 10) === key;
-const isReservedProp = /* @__PURE__ */ makeMap(",key,ref,ref_for,ref_key,onVnodeBeforeMount,onVnodeMounted,onVnodeBeforeUpdate,onVnodeUpdated,onVnodeBeforeUnmount,onVnodeUnmounted");
+const isReservedProp = /* @__PURE__ */ makeMap(
+  ",key,ref,ref_for,ref_key,onVnodeBeforeMount,onVnodeMounted,onVnodeBeforeUpdate,onVnodeUpdated,onVnodeBeforeUnmount,onVnodeUnmounted"
+);
 const cacheStringFunction = (fn) => {
   const cache = /* @__PURE__ */ Object.create(null);
   return (str) => {
@@ -409,7 +411,7 @@ function trigger(target, type, key, newValue, oldValue, oldTarget) {
   let deps = [];
   if (type === "clear") {
     deps = [...depsMap.values()];
-  } else if (key === "length" && isArray(target)) {
+  } else if (key === "length" && isArray$1(target)) {
     depsMap.forEach((dep, key2) => {
       if (key2 === "length" || key2 >= newValue) {
         deps.push(dep);
@@ -421,7 +423,7 @@ function trigger(target, type, key, newValue, oldValue, oldTarget) {
     }
     switch (type) {
       case "add":
-        if (!isArray(target)) {
+        if (!isArray$1(target)) {
           deps.push(depsMap.get(ITERATE_KEY));
           if (isMap(target)) {
             deps.push(depsMap.get(MAP_KEY_ITERATE_KEY));
@@ -431,7 +433,7 @@ function trigger(target, type, key, newValue, oldValue, oldTarget) {
         }
         break;
       case "delete":
-        if (!isArray(target)) {
+        if (!isArray$1(target)) {
           deps.push(depsMap.get(ITERATE_KEY));
           if (isMap(target)) {
             deps.push(depsMap.get(MAP_KEY_ITERATE_KEY));
@@ -464,7 +466,7 @@ function trigger(target, type, key, newValue, oldValue, oldTarget) {
   }
 }
 function triggerEffects(dep, debuggerEventExtraInfo) {
-  const effects = isArray(dep) ? dep : [...dep];
+  const effects = isArray$1(dep) ? dep : [...dep];
   for (const effect of effects) {
     if (effect.computed) {
       triggerEffect(effect);
@@ -486,7 +488,9 @@ function triggerEffect(effect, debuggerEventExtraInfo) {
   }
 }
 const isNonTrackableKeys = /* @__PURE__ */ makeMap(`__proto__,__v_isRef,__isVue`);
-const builtInSymbols = new Set(/* @__PURE__ */ Object.getOwnPropertyNames(Symbol).filter((key) => key !== "arguments" && key !== "caller").map((key) => Symbol[key]).filter(isSymbol));
+const builtInSymbols = new Set(
+  /* @__PURE__ */ Object.getOwnPropertyNames(Symbol).filter((key) => key !== "arguments" && key !== "caller").map((key) => Symbol[key]).filter(isSymbol)
+);
 const get = /* @__PURE__ */ createGetter();
 const shallowGet = /* @__PURE__ */ createGetter(false, true);
 const readonlyGet = /* @__PURE__ */ createGetter(true);
@@ -528,7 +532,7 @@ function createGetter(isReadonly2 = false, shallow = false) {
     } else if (key === "__v_raw" && receiver === (isReadonly2 ? shallow ? shallowReadonlyMap : readonlyMap : shallow ? shallowReactiveMap : reactiveMap).get(target)) {
       return target;
     }
-    const targetIsArray = isArray(target);
+    const targetIsArray = isArray$1(target);
     if (!isReadonly2 && targetIsArray && hasOwn(arrayInstrumentations, key)) {
       return Reflect.get(arrayInstrumentations, key, receiver);
     }
@@ -559,17 +563,17 @@ function createSetter(shallow = false) {
     if (isReadonly(oldValue) && isRef(oldValue) && !isRef(value)) {
       return false;
     }
-    if (!shallow && !isReadonly(value)) {
-      if (!isShallow(value)) {
-        value = toRaw(value);
+    if (!shallow) {
+      if (!isShallow(value) && !isReadonly(value)) {
         oldValue = toRaw(oldValue);
+        value = toRaw(value);
       }
-      if (!isArray(target) && isRef(oldValue) && !isRef(value)) {
+      if (!isArray$1(target) && isRef(oldValue) && !isRef(value)) {
         oldValue.value = value;
         return true;
       }
     }
-    const hadKey = isArray(target) && isIntegerKey(key) ? Number(key) < target.length : hasOwn(target, key);
+    const hadKey = isArray$1(target) && isIntegerKey(key) ? Number(key) < target.length : hasOwn(target, key);
     const result = Reflect.set(target, key, value, receiver);
     if (target === toRaw(receiver)) {
       if (!hadKey) {
@@ -598,7 +602,7 @@ function has(target, key) {
   return result;
 }
 function ownKeys(target) {
-  track(target, "iterate", isArray(target) ? "length" : ITERATE_KEY);
+  track(target, "iterate", isArray$1(target) ? "length" : ITERATE_KEY);
   return Reflect.ownKeys(target);
 }
 const mutableHandlers = {
@@ -973,10 +977,11 @@ class RefImpl {
     return this._value;
   }
   set value(newVal) {
-    newVal = this.__v_isShallow ? newVal : toRaw(newVal);
+    const useDirectValue = this.__v_isShallow || isShallow(newVal) || isReadonly(newVal);
+    newVal = useDirectValue ? newVal : toRaw(newVal);
     if (hasChanged(newVal, this._rawValue)) {
       this._rawValue = newVal;
-      this._value = this.__v_isShallow ? newVal : toReactive(newVal);
+      this._value = useDirectValue ? newVal : toReactive(newVal);
       triggerRefValue(this);
     }
   }
@@ -999,37 +1004,13 @@ const shallowUnwrapHandlers = {
 function proxyRefs(objectWithRefs) {
   return isReactive(objectWithRefs) ? objectWithRefs : new Proxy(objectWithRefs, shallowUnwrapHandlers);
 }
-function toRefs(object) {
-  const ret = isArray(object) ? new Array(object.length) : {};
-  for (const key in object) {
-    ret[key] = toRef(object, key);
-  }
-  return ret;
-}
-class ObjectRefImpl {
-  constructor(_object, _key, _defaultValue) {
-    this._object = _object;
-    this._key = _key;
-    this._defaultValue = _defaultValue;
-    this.__v_isRef = true;
-  }
-  get value() {
-    const val = this._object[this._key];
-    return val === void 0 ? this._defaultValue : val;
-  }
-  set value(newVal) {
-    this._object[this._key] = newVal;
-  }
-}
-function toRef(object, key, defaultValue) {
-  const val = object[key];
-  return isRef(val) ? val : new ObjectRefImpl(object, key, defaultValue);
-}
+var _a;
 class ComputedRefImpl {
   constructor(getter, _setter, isReadonly2, isSSR) {
     this._setter = _setter;
     this.dep = void 0;
     this.__v_isRef = true;
+    this[_a] = false;
     this._dirty = true;
     this.effect = new ReactiveEffect(getter, () => {
       if (!this._dirty) {
@@ -1054,6 +1035,7 @@ class ComputedRefImpl {
     this._setter(newValue);
   }
 }
+_a = "__v_isReadonly";
 function computed$1(getterOrOptions, debugOptions, isSSR = false) {
   let getter;
   let setter;
@@ -1127,15 +1109,11 @@ let isFlushing = false;
 let isFlushPending = false;
 const queue = [];
 let flushIndex = 0;
-const pendingPreFlushCbs = [];
-let activePreFlushCbs = null;
-let preFlushIndex = 0;
 const pendingPostFlushCbs = [];
 let activePostFlushCbs = null;
 let postFlushIndex = 0;
 const resolvedPromise = /* @__PURE__ */ Promise.resolve();
 let currentFlushPromise = null;
-let currentPreFlushParentJob = null;
 function nextTick(fn) {
   const p2 = currentFlushPromise || resolvedPromise;
   return fn ? p2.then(this ? fn.bind(this) : fn) : p2;
@@ -1151,7 +1129,7 @@ function findInsertionIndex(id) {
   return start;
 }
 function queueJob(job) {
-  if ((!queue.length || !queue.includes(job, isFlushing && job.allowRecurse ? flushIndex + 1 : flushIndex)) && job !== currentPreFlushParentJob) {
+  if (!queue.length || !queue.includes(job, isFlushing && job.allowRecurse ? flushIndex + 1 : flushIndex)) {
     if (job.id == null) {
       queue.push(job);
     } else {
@@ -1172,38 +1150,27 @@ function invalidateJob(job) {
     queue.splice(i, 1);
   }
 }
-function queueCb(cb, activeQueue, pendingQueue, index) {
-  if (!isArray(cb)) {
-    if (!activeQueue || !activeQueue.includes(cb, cb.allowRecurse ? index + 1 : index)) {
-      pendingQueue.push(cb);
+function queuePostFlushCb(cb) {
+  if (!isArray$1(cb)) {
+    if (!activePostFlushCbs || !activePostFlushCbs.includes(cb, cb.allowRecurse ? postFlushIndex + 1 : postFlushIndex)) {
+      pendingPostFlushCbs.push(cb);
     }
   } else {
-    pendingQueue.push(...cb);
+    pendingPostFlushCbs.push(...cb);
   }
   queueFlush();
 }
-function queuePreFlushCb(cb) {
-  queueCb(cb, activePreFlushCbs, pendingPreFlushCbs, preFlushIndex);
-}
-function queuePostFlushCb(cb) {
-  queueCb(cb, activePostFlushCbs, pendingPostFlushCbs, postFlushIndex);
-}
-function flushPreFlushCbs(seen2, parentJob = null) {
-  if (pendingPreFlushCbs.length) {
-    currentPreFlushParentJob = parentJob;
-    activePreFlushCbs = [...new Set(pendingPreFlushCbs)];
-    pendingPreFlushCbs.length = 0;
-    for (preFlushIndex = 0; preFlushIndex < activePreFlushCbs.length; preFlushIndex++) {
-      activePreFlushCbs[preFlushIndex]();
+function flushPreFlushCbs(seen2, i = isFlushing ? flushIndex + 1 : 0) {
+  for (; i < queue.length; i++) {
+    const cb = queue[i];
+    if (cb && cb.pre) {
+      queue.splice(i, 1);
+      i--;
+      cb();
     }
-    activePreFlushCbs = null;
-    preFlushIndex = 0;
-    currentPreFlushParentJob = null;
-    flushPreFlushCbs(seen2, parentJob);
   }
 }
 function flushPostFlushCbs(seen2) {
-  flushPreFlushCbs();
   if (pendingPostFlushCbs.length) {
     const deduped = [...new Set(pendingPostFlushCbs)];
     pendingPostFlushCbs.length = 0;
@@ -1221,11 +1188,20 @@ function flushPostFlushCbs(seen2) {
   }
 }
 const getId = (job) => job.id == null ? Infinity : job.id;
+const comparator = (a, b) => {
+  const diff = getId(a) - getId(b);
+  if (diff === 0) {
+    if (a.pre && !b.pre)
+      return -1;
+    if (b.pre && !a.pre)
+      return 1;
+  }
+  return diff;
+};
 function flushJobs(seen2) {
   isFlushPending = false;
   isFlushing = true;
-  flushPreFlushCbs(seen2);
-  queue.sort((a, b) => getId(a) - getId(b));
+  queue.sort(comparator);
   const check = NOOP;
   try {
     for (flushIndex = 0; flushIndex < queue.length; flushIndex++) {
@@ -1242,8 +1218,8 @@ function flushJobs(seen2) {
     flushPostFlushCbs();
     isFlushing = false;
     currentFlushPromise = null;
-    if (queue.length || pendingPreFlushCbs.length || pendingPostFlushCbs.length) {
-      flushJobs(seen2);
+    if (queue.length || pendingPostFlushCbs.length) {
+      flushJobs();
     }
   }
 }
@@ -1311,15 +1287,19 @@ function normalizeEmitsOptions(comp, appContext, asMixin = false) {
     }
   }
   if (!raw && !hasExtends) {
-    cache.set(comp, null);
+    if (isObject(comp)) {
+      cache.set(comp, null);
+    }
     return null;
   }
-  if (isArray(raw)) {
+  if (isArray$1(raw)) {
     raw.forEach((key) => normalized[key] = null);
   } else {
     extend(normalized, raw);
   }
-  cache.set(comp, normalized);
+  if (isObject(comp)) {
+    cache.set(comp, normalized);
+  }
   return normalized;
 }
 function isEmitListener(options, key) {
@@ -1552,7 +1532,16 @@ function mountSuspense(vnode, container, anchor, parentComponent, parentSuspense
   if (suspense.deps > 0) {
     triggerEvent(vnode, "onPending");
     triggerEvent(vnode, "onFallback");
-    patch(null, vnode.ssFallback, container, anchor, parentComponent, null, isSVG, slotScopeIds);
+    patch(
+      null,
+      vnode.ssFallback,
+      container,
+      anchor,
+      parentComponent,
+      null,
+      isSVG,
+      slotScopeIds
+    );
     setActiveBranch(suspense, vnode.ssFallback);
   } else {
     suspense.resolve();
@@ -1572,7 +1561,17 @@ function patchSuspense(n1, n2, container, anchor, parentComponent, isSVG, slotSc
       if (suspense.deps <= 0) {
         suspense.resolve();
       } else if (isInFallback) {
-        patch(activeBranch, newFallback, container, anchor, parentComponent, null, isSVG, slotScopeIds, optimized);
+        patch(
+          activeBranch,
+          newFallback,
+          container,
+          anchor,
+          parentComponent,
+          null,
+          isSVG,
+          slotScopeIds,
+          optimized
+        );
         setActiveBranch(suspense, newFallback);
       }
     } else {
@@ -1591,7 +1590,17 @@ function patchSuspense(n1, n2, container, anchor, parentComponent, isSVG, slotSc
         if (suspense.deps <= 0) {
           suspense.resolve();
         } else {
-          patch(activeBranch, newFallback, container, anchor, parentComponent, null, isSVG, slotScopeIds, optimized);
+          patch(
+            activeBranch,
+            newFallback,
+            container,
+            anchor,
+            parentComponent,
+            null,
+            isSVG,
+            slotScopeIds,
+            optimized
+          );
           setActiveBranch(suspense, newFallback);
         }
       } else if (activeBranch && isSameVNodeType(newBranch, activeBranch)) {
@@ -1702,7 +1711,17 @@ function createSuspenseBoundary(vnode, parent, parentComponent, container, hidde
         if (!suspense.isInFallback) {
           return;
         }
-        patch(null, fallbackVNode, container2, anchor2, parentComponent2, null, isSVG2, slotScopeIds, optimized);
+        patch(
+          null,
+          fallbackVNode,
+          container2,
+          anchor2,
+          parentComponent2,
+          null,
+          isSVG2,
+          slotScopeIds,
+          optimized
+        );
         setActiveBranch(suspense, fallbackVNode);
       };
       const delayEnter = fallbackVNode.transition && fallbackVNode.transition.mode === "out-in";
@@ -1710,7 +1729,12 @@ function createSuspenseBoundary(vnode, parent, parentComponent, container, hidde
         activeBranch.transition.afterLeave = mountFallback;
       }
       suspense.isInFallback = true;
-      unmount(activeBranch, parentComponent2, null, true);
+      unmount(
+        activeBranch,
+        parentComponent2,
+        null,
+        true
+      );
       if (!delayEnter) {
         mountFallback();
       }
@@ -1741,7 +1765,15 @@ function createSuspenseBoundary(vnode, parent, parentComponent, container, hidde
           vnode2.el = hydratedEl;
         }
         const placeholder = !hydratedEl && instance.subTree.el;
-        setupRenderEffect(instance, vnode2, parentNode(hydratedEl || instance.subTree.el), hydratedEl ? null : next(instance.subTree), suspense, isSVG, optimized);
+        setupRenderEffect(
+          instance,
+          vnode2,
+          parentNode(hydratedEl || instance.subTree.el),
+          hydratedEl ? null : next(instance.subTree),
+          suspense,
+          isSVG,
+          optimized
+        );
         if (placeholder) {
           remove2(placeholder);
         }
@@ -1792,7 +1824,7 @@ function normalizeSuspenseSlot(s) {
       closeBlock();
     }
   }
-  if (isArray(s)) {
+  if (isArray$1(s)) {
     const singleChild = filterSingleRoot(s);
     s = singleChild;
   }
@@ -1804,7 +1836,7 @@ function normalizeSuspenseSlot(s) {
 }
 function queueEffectWithSuspense(fn, suspense) {
   if (suspense && suspense.pendingBranch) {
-    if (isArray(fn)) {
+    if (isArray$1(fn)) {
       suspense.effects.push(...fn);
     } else {
       suspense.effects.push(fn);
@@ -1861,7 +1893,7 @@ function doWatch(source, cb, { immediate, deep, flush, onTrack, onTrigger } = EM
   } else if (isReactive(source)) {
     getter = () => source;
     deep = true;
-  } else if (isArray(source)) {
+  } else if (isArray$1(source)) {
     isMultiSource = true;
     forceTrigger = source.some((s) => isReactive(s) || isShallow(s));
     getter = () => source.map((s) => {
@@ -1943,7 +1975,10 @@ function doWatch(source, cb, { immediate, deep, flush, onTrack, onTrigger } = EM
   } else if (flush === "post") {
     scheduler = () => queuePostRenderEffect(job, instance && instance.suspense);
   } else {
-    scheduler = () => queuePreFlushCb(job);
+    job.pre = true;
+    if (instance)
+      job.id = instance.uid;
+    scheduler = () => queueJob(job);
   }
   const effect = new ReactiveEffect(getter, scheduler);
   if (cb) {
@@ -2005,7 +2040,7 @@ function traverse(value, seen2) {
   seen2.add(value);
   if (isRef(value)) {
     traverse(value.value, seen2);
-  } else if (isArray(value)) {
+  } else if (isArray$1(value)) {
     for (let i = 0; i < value.length; i++) {
       traverse(value[i], seen2);
     }
@@ -2013,7 +2048,7 @@ function traverse(value, seen2) {
     value.forEach((v) => {
       traverse(v, seen2);
     });
-  } else if (isPlainObject$1(value)) {
+  } else if (isPlainObject(value)) {
     for (const key in value) {
       traverse(value[key], seen2);
     }
@@ -2081,7 +2116,7 @@ function injectHook(type, hook, target = currentInstance, prepend = false) {
     return wrappedHook;
   }
 }
-const createHook = (lifecycle) => (hook, target = currentInstance) => (!isInSSRComponentSetup || lifecycle === "sp") && injectHook(lifecycle, hook, target);
+const createHook = (lifecycle) => (hook, target = currentInstance) => (!isInSSRComponentSetup || lifecycle === "sp") && injectHook(lifecycle, (...args) => hook(...args), target);
 const onBeforeMount = createHook("bm");
 const onMounted = createHook("m");
 const onBeforeUpdate = createHook("bu");
@@ -2348,7 +2383,7 @@ function applyOptions(instance) {
     callHook(created, instance, "c");
   }
   function registerLifecycleHook(register, hook) {
-    if (isArray(hook)) {
+    if (isArray$1(hook)) {
       hook.forEach((_hook) => register(_hook.bind(publicThis)));
     } else if (hook) {
       register(hook.bind(publicThis));
@@ -2366,7 +2401,7 @@ function applyOptions(instance) {
   registerLifecycleHook(onBeforeUnmount, beforeUnmount);
   registerLifecycleHook(onUnmounted, unmounted);
   registerLifecycleHook(onServerPrefetch, serverPrefetch);
-  if (isArray(expose)) {
+  if (isArray$1(expose)) {
     if (expose.length) {
       const exposed = instance.exposed || (instance.exposed = {});
       expose.forEach((key) => {
@@ -2391,7 +2426,7 @@ function applyOptions(instance) {
     instance.directives = directives;
 }
 function resolveInjections(injectOptions, ctx, checkDuplicateProperties = NOOP, unwrapRef = false) {
-  if (isArray(injectOptions)) {
+  if (isArray$1(injectOptions)) {
     injectOptions = normalizeInject(injectOptions);
   }
   for (const key in injectOptions) {
@@ -2423,7 +2458,7 @@ function resolveInjections(injectOptions, ctx, checkDuplicateProperties = NOOP, 
   }
 }
 function callHook(hook, instance, type) {
-  callWithAsyncErrorHandling(isArray(hook) ? hook.map((h2) => h2.bind(instance.proxy)) : hook.bind(instance.proxy), instance, type);
+  callWithAsyncErrorHandling(isArray$1(hook) ? hook.map((h2) => h2.bind(instance.proxy)) : hook.bind(instance.proxy), instance, type);
 }
 function createWatcher(raw, ctx, publicThis, key) {
   const getter = key.includes(".") ? createPathGetter(publicThis, key) : () => publicThis[key];
@@ -2435,7 +2470,7 @@ function createWatcher(raw, ctx, publicThis, key) {
   } else if (isFunction(raw)) {
     watch(getter, raw.bind(publicThis));
   } else if (isObject(raw)) {
-    if (isArray(raw)) {
+    if (isArray$1(raw)) {
       raw.forEach((r) => createWatcher(r, ctx, publicThis, key));
     } else {
       const handler = isFunction(raw.handler) ? raw.handler.bind(publicThis) : ctx[raw.handler];
@@ -2465,7 +2500,9 @@ function resolveMergedOptions(instance) {
     }
     mergeOptions$1(resolved, base2, optionMergeStrategies);
   }
-  cache.set(base2, resolved);
+  if (isObject(base2)) {
+    cache.set(base2, resolved);
+  }
   return resolved;
 }
 function mergeOptions$1(to, from, strats, asMixin = false) {
@@ -2527,7 +2564,7 @@ function mergeInject(to, from) {
   return mergeObjectOptions(normalizeInject(to), normalizeInject(from));
 }
 function normalizeInject(raw) {
-  if (isArray(raw)) {
+  if (isArray$1(raw)) {
     const res = {};
     for (let i = 0; i < raw.length; i++) {
       res[raw[i]] = raw[i];
@@ -2729,10 +2766,12 @@ function normalizePropsOptions(comp, appContext, asMixin = false) {
     }
   }
   if (!raw && !hasExtends) {
-    cache.set(comp, EMPTY_ARR);
+    if (isObject(comp)) {
+      cache.set(comp, EMPTY_ARR);
+    }
     return EMPTY_ARR;
   }
-  if (isArray(raw)) {
+  if (isArray$1(raw)) {
     for (let i = 0; i < raw.length; i++) {
       const normalizedKey = camelize(raw[i]);
       if (validatePropName(normalizedKey)) {
@@ -2744,7 +2783,7 @@ function normalizePropsOptions(comp, appContext, asMixin = false) {
       const normalizedKey = camelize(key);
       if (validatePropName(normalizedKey)) {
         const opt = raw[key];
-        const prop = normalized[normalizedKey] = isArray(opt) || isFunction(opt) ? { type: opt } : opt;
+        const prop = normalized[normalizedKey] = isArray$1(opt) || isFunction(opt) ? { type: opt } : opt;
         if (prop) {
           const booleanIndex = getTypeIndex(Boolean, prop.type);
           const stringIndex = getTypeIndex(String, prop.type);
@@ -2758,7 +2797,9 @@ function normalizePropsOptions(comp, appContext, asMixin = false) {
     }
   }
   const res = [normalized, needCastKeys];
-  cache.set(comp, res);
+  if (isObject(comp)) {
+    cache.set(comp, res);
+  }
   return res;
 }
 function validatePropName(key) {
@@ -2775,7 +2816,7 @@ function isSameType(a, b) {
   return getType(a) === getType(b);
 }
 function getTypeIndex(type, expectedTypes) {
-  if (isArray(expectedTypes)) {
+  if (isArray$1(expectedTypes)) {
     return expectedTypes.findIndex((t) => isSameType(t, type));
   } else if (isFunction(expectedTypes)) {
     return isSameType(expectedTypes, type) ? 0 : -1;
@@ -2783,7 +2824,7 @@ function getTypeIndex(type, expectedTypes) {
   return -1;
 }
 const isInternalKey = (key) => key[0] === "_" || key === "$stable";
-const normalizeSlotValue = (value) => isArray(value) ? value.map(normalizeVNode) : [normalizeVNode(value)];
+const normalizeSlotValue = (value) => isArray$1(value) ? value.map(normalizeVNode) : [normalizeVNode(value)];
 const normalizeSlot$1 = (key, rawSlot, ctx) => {
   if (rawSlot._n) {
     return rawSlot;
@@ -2972,8 +3013,8 @@ function createAppAPI(render, hydrate) {
   };
 }
 function setRef(rawRef, oldRawRef, parentSuspense, vnode, isUnmount = false) {
-  if (isArray(rawRef)) {
-    rawRef.forEach((r, i) => setRef(r, oldRawRef && (isArray(oldRawRef) ? oldRawRef[i] : oldRawRef), parentSuspense, vnode, isUnmount));
+  if (isArray$1(rawRef)) {
+    rawRef.forEach((r, i) => setRef(r, oldRawRef && (isArray$1(oldRawRef) ? oldRawRef[i] : oldRawRef), parentSuspense, vnode, isUnmount));
     return;
   }
   if (isAsyncWrapper(vnode) && !isUnmount) {
@@ -3005,9 +3046,9 @@ function setRef(rawRef, oldRawRef, parentSuspense, vnode, isUnmount = false) {
         if (rawRef.f) {
           const existing = _isString ? refs[ref2] : ref2.value;
           if (isUnmount) {
-            isArray(existing) && remove(existing, refValue);
+            isArray$1(existing) && remove(existing, refValue);
           } else {
-            if (!isArray(existing)) {
+            if (!isArray$1(existing)) {
               if (_isString) {
                 refs[ref2] = [refValue];
                 if (hasOwn(setupState, ref2)) {
@@ -3067,7 +3108,7 @@ function createHydrationFunctions(rendererInternals) {
     const isFragmentStart = isComment(node) && node.data === "[";
     const onMismatch = () => handleMismatch(node, vnode, parentComponent, parentSuspense, slotScopeIds, isFragmentStart);
     const { type, ref: ref2, shapeFlag, patchFlag } = vnode;
-    const domType = node.nodeType;
+    let domType = node.nodeType;
     vnode.el = node;
     if (patchFlag === -2) {
       optimized = false;
@@ -3099,9 +3140,11 @@ function createHydrationFunctions(rendererInternals) {
         }
         break;
       case Static:
-        if (domType !== 1 && domType !== 3) {
-          nextNode = onMismatch();
-        } else {
+        if (isFragmentStart) {
+          node = nextSibling(node);
+          domType = node.nodeType;
+        }
+        if (domType === 1 || domType === 3) {
           nextNode = node;
           const needToAdoptContent = !vnode.children.length;
           for (let i = 0; i < vnode.staticCount; i++) {
@@ -3112,7 +3155,9 @@ function createHydrationFunctions(rendererInternals) {
             }
             nextNode = nextSibling(nextNode);
           }
-          return nextNode;
+          return isFragmentStart ? nextSibling(nextNode) : nextNode;
+        } else {
+          onMismatch();
         }
         break;
       case Fragment:
@@ -3292,7 +3337,7 @@ function createHydrationRenderer(options) {
 function baseCreateRenderer(options, createHydrationFns) {
   const target = getGlobalThis();
   target.__VUE__ = true;
-  const { insert: hostInsert, remove: hostRemove, patchProp: hostPatchProp, createElement: hostCreateElement, createText: hostCreateText, createComment: hostCreateComment, setText: hostSetText, setElementText: hostSetElementText, parentNode: hostParentNode, nextSibling: hostNextSibling, setScopeId: hostSetScopeId = NOOP, cloneNode: hostCloneNode, insertStaticContent: hostInsertStaticContent } = options;
+  const { insert: hostInsert, remove: hostRemove, patchProp: hostPatchProp, createElement: hostCreateElement, createText: hostCreateText, createComment: hostCreateComment, setText: hostSetText, setElementText: hostSetElementText, parentNode: hostParentNode, nextSibling: hostNextSibling, setScopeId: hostSetScopeId = NOOP, insertStaticContent: hostInsertStaticContent } = options;
   const patch = (n1, n2, container, anchor = null, parentComponent = null, parentSuspense = null, isSVG = false, slotScopeIds = null, optimized = !!n2.dynamicChildren) => {
     if (n1 === n2) {
       return;
@@ -3387,34 +3432,30 @@ function baseCreateRenderer(options, createHydrationFns) {
   const mountElement = (vnode, container, anchor, parentComponent, parentSuspense, isSVG, slotScopeIds, optimized) => {
     let el;
     let vnodeHook;
-    const { type, props, shapeFlag, transition, patchFlag, dirs } = vnode;
-    if (vnode.el && hostCloneNode !== void 0 && patchFlag === -1) {
-      el = vnode.el = hostCloneNode(vnode.el);
-    } else {
-      el = vnode.el = hostCreateElement(vnode.type, isSVG, props && props.is, props);
-      if (shapeFlag & 8) {
-        hostSetElementText(el, vnode.children);
-      } else if (shapeFlag & 16) {
-        mountChildren(vnode.children, el, null, parentComponent, parentSuspense, isSVG && type !== "foreignObject", slotScopeIds, optimized);
-      }
-      if (dirs) {
-        invokeDirectiveHook(vnode, null, parentComponent, "created");
-      }
-      if (props) {
-        for (const key in props) {
-          if (key !== "value" && !isReservedProp(key)) {
-            hostPatchProp(el, key, null, props[key], isSVG, vnode.children, parentComponent, parentSuspense, unmountChildren);
-          }
-        }
-        if ("value" in props) {
-          hostPatchProp(el, "value", null, props.value);
-        }
-        if (vnodeHook = props.onVnodeBeforeMount) {
-          invokeVNodeHook(vnodeHook, parentComponent, vnode);
-        }
-      }
-      setScopeId(el, vnode, vnode.scopeId, slotScopeIds, parentComponent);
+    const { type, props, shapeFlag, transition, dirs } = vnode;
+    el = vnode.el = hostCreateElement(vnode.type, isSVG, props && props.is, props);
+    if (shapeFlag & 8) {
+      hostSetElementText(el, vnode.children);
+    } else if (shapeFlag & 16) {
+      mountChildren(vnode.children, el, null, parentComponent, parentSuspense, isSVG && type !== "foreignObject", slotScopeIds, optimized);
     }
+    if (dirs) {
+      invokeDirectiveHook(vnode, null, parentComponent, "created");
+    }
+    if (props) {
+      for (const key in props) {
+        if (key !== "value" && !isReservedProp(key)) {
+          hostPatchProp(el, key, null, props[key], isSVG, vnode.children, parentComponent, parentSuspense, unmountChildren);
+        }
+      }
+      if ("value" in props) {
+        hostPatchProp(el, "value", null, props.value);
+      }
+      if (vnodeHook = props.onVnodeBeforeMount) {
+        invokeVNodeHook(vnodeHook, parentComponent, vnode);
+      }
+    }
+    setScopeId(el, vnode, vnode.scopeId, slotScopeIds, parentComponent);
     if (dirs) {
       invokeDirectiveHook(vnode, null, parentComponent, "beforeMount");
     }
@@ -3524,6 +3565,13 @@ function baseCreateRenderer(options, createHydrationFns) {
   };
   const patchProps = (el, vnode, oldProps, newProps, parentComponent, parentSuspense, isSVG) => {
     if (oldProps !== newProps) {
+      if (oldProps !== EMPTY_OBJ) {
+        for (const key in oldProps) {
+          if (!isReservedProp(key) && !(key in newProps)) {
+            hostPatchProp(el, key, oldProps[key], null, isSVG, vnode.children, parentComponent, parentSuspense, unmountChildren);
+          }
+        }
+      }
       for (const key in newProps) {
         if (isReservedProp(key))
           continue;
@@ -3531,13 +3579,6 @@ function baseCreateRenderer(options, createHydrationFns) {
         const prev = oldProps[key];
         if (next !== prev && key !== "value") {
           hostPatchProp(el, key, prev, next, isSVG, vnode.children, parentComponent, parentSuspense, unmountChildren);
-        }
-      }
-      if (oldProps !== EMPTY_OBJ) {
-        for (const key in oldProps) {
-          if (!isReservedProp(key) && !(key in newProps)) {
-            hostPatchProp(el, key, oldProps[key], null, isSVG, vnode.children, parentComponent, parentSuspense, unmountChildren);
-          }
         }
       }
       if ("value" in newProps) {
@@ -3634,7 +3675,9 @@ function baseCreateRenderer(options, createHydrationFns) {
             hydrateNode(el, instance.subTree, instance, parentSuspense, null);
           };
           if (isAsyncWrapperVNode) {
-            initialVNode.type.__asyncLoader().then(() => !instance.isUnmounted && hydrateSubTree());
+            initialVNode.type.__asyncLoader().then(
+              () => !instance.isUnmounted && hydrateSubTree()
+            );
           } else {
             hydrateSubTree();
           }
@@ -3676,7 +3719,15 @@ function baseCreateRenderer(options, createHydrationFns) {
         const nextTree = renderComponentRoot(instance);
         const prevTree = instance.subTree;
         instance.subTree = nextTree;
-        patch(prevTree, nextTree, hostParentNode(prevTree.el), getNextHostNode(prevTree), instance, parentSuspense, isSVG);
+        patch(
+          prevTree,
+          nextTree,
+          hostParentNode(prevTree.el),
+          getNextHostNode(prevTree),
+          instance,
+          parentSuspense,
+          isSVG
+        );
         next.el = nextTree.el;
         if (originNext === null) {
           updateHOCHostEl(instance, nextTree.el);
@@ -3689,7 +3740,11 @@ function baseCreateRenderer(options, createHydrationFns) {
         }
       }
     };
-    const effect = instance.effect = new ReactiveEffect(componentUpdateFn, () => queueJob(update), instance.scope);
+    const effect = instance.effect = new ReactiveEffect(
+      componentUpdateFn,
+      () => queueJob(update),
+      instance.scope
+    );
     const update = instance.update = () => effect.run();
     update.id = instance.uid;
     toggleRecurse(instance, true);
@@ -3703,7 +3758,7 @@ function baseCreateRenderer(options, createHydrationFns) {
     updateProps(instance, nextVNode.props, prevProps, optimized);
     updateSlots(instance, nextVNode.children, optimized);
     pauseTracking();
-    flushPreFlushCbs(void 0, instance.update);
+    flushPreFlushCbs();
     resetTracking();
   };
   const patchChildren = (n1, n2, container, anchor, parentComponent, parentSuspense, isSVG, slotScopeIds, optimized = false) => {
@@ -4045,6 +4100,7 @@ function baseCreateRenderer(options, createHydrationFns) {
     } else {
       patch(container._vnode || null, vnode, container, null, null, null, isSVG);
     }
+    flushPreFlushCbs();
     flushPostFlushCbs();
     container._vnode = vnode;
   };
@@ -4077,7 +4133,7 @@ function toggleRecurse({ effect, update }, allowed) {
 function traverseStaticChildren(n1, n2, shallow = false) {
   const ch1 = n1.children;
   const ch2 = n2.children;
-  if (isArray(ch1) && isArray(ch2)) {
+  if (isArray$1(ch1) && isArray$1(ch2)) {
     for (let i = 0; i < ch1.length; i++) {
       const c1 = ch1[i];
       let c2 = ch2[i];
@@ -4246,7 +4302,7 @@ function _createVNode(type, props = null, children = null, patchFlag = 0, dynami
       props.class = normalizeClass(klass);
     }
     if (isObject(style)) {
-      if (isProxy(style) && !isArray(style)) {
+      if (isProxy(style) && !isArray$1(style)) {
         style = extend({}, style);
       }
       props.style = normalizeStyle(style);
@@ -4269,7 +4325,7 @@ function cloneVNode(vnode, extraProps, mergeRef = false) {
     type: vnode.type,
     props: mergedProps,
     key: mergedProps && normalizeKey(mergedProps),
-    ref: extraProps && extraProps.ref ? mergeRef && ref2 ? isArray(ref2) ? ref2.concat(normalizeRef(extraProps)) : [ref2, normalizeRef(extraProps)] : normalizeRef(extraProps) : ref2,
+    ref: extraProps && extraProps.ref ? mergeRef && ref2 ? isArray$1(ref2) ? ref2.concat(normalizeRef(extraProps)) : [ref2, normalizeRef(extraProps)] : normalizeRef(extraProps) : ref2,
     scopeId: vnode.scopeId,
     slotScopeIds: vnode.slotScopeIds,
     children,
@@ -4301,8 +4357,12 @@ function createCommentVNode(text = "", asBlock = false) {
 function normalizeVNode(child) {
   if (child == null || typeof child === "boolean") {
     return createVNode(Comment);
-  } else if (isArray(child)) {
-    return createVNode(Fragment, null, child.slice());
+  } else if (isArray$1(child)) {
+    return createVNode(
+      Fragment,
+      null,
+      child.slice()
+    );
   } else if (typeof child === "object") {
     return cloneIfMounted(child);
   } else {
@@ -4310,14 +4370,14 @@ function normalizeVNode(child) {
   }
 }
 function cloneIfMounted(child) {
-  return child.el === null || child.memo ? child : cloneVNode(child);
+  return child.el === null && child.patchFlag !== -1 || child.memo ? child : cloneVNode(child);
 }
 function normalizeChildren(vnode, children) {
   let type = 0;
   const { shapeFlag } = vnode;
   if (children == null) {
     children = null;
-  } else if (isArray(children)) {
+  } else if (isArray$1(children)) {
     type = 16;
   } else if (typeof children === "object") {
     if (shapeFlag & (1 | 64)) {
@@ -4371,7 +4431,7 @@ function mergeProps(...args) {
       } else if (isOn(key)) {
         const existing = ret[key];
         const incoming = toMerge[key];
-        if (incoming && existing !== incoming && !(isArray(existing) && existing.includes(incoming))) {
+        if (incoming && existing !== incoming && !(isArray$1(existing) && existing.includes(incoming))) {
           ret[key] = existing ? [].concat(existing, incoming) : incoming;
         }
       } else if (key !== "") {
@@ -4461,7 +4521,6 @@ function createComponentInstance(vnode, parent, suspense) {
   return instance;
 }
 let currentInstance = null;
-const getCurrentInstance = () => currentInstance || currentRenderingInstance;
 const setCurrentInstance = (instance) => {
   currentInstance = instance;
   instance.scope.on();
@@ -4532,7 +4591,7 @@ function finishComponentSetup(instance, isSSR, skipOptions) {
   const Component = instance.type;
   if (!instance.render) {
     if (!isSSR && compile && !Component.render) {
-      const template = Component.template;
+      const template = Component.template || resolveMergedOptions(instance).template;
       if (template) {
         const { isCustomElement, compilerOptions } = instance.appContext.config;
         const { delimiters, compilerOptions: componentCompilerOptions } = Component;
@@ -4602,7 +4661,7 @@ const computed = (getterOrOptions, debugOptions) => {
 function h(type, propsOrChildren, children) {
   const l = arguments.length;
   if (l === 2) {
-    if (isObject(propsOrChildren) && !isArray(propsOrChildren)) {
+    if (isObject(propsOrChildren) && !isArray$1(propsOrChildren)) {
       if (isVNode(propsOrChildren)) {
         return createVNode(type, null, [propsOrChildren]);
       }
@@ -4619,7 +4678,7 @@ function h(type, propsOrChildren, children) {
     return createVNode(type, propsOrChildren, children);
   }
 }
-const version = "3.2.37";
+const version = "3.2.40";
 const svgNS = "http://www.w3.org/2000/svg";
 const doc = typeof document !== "undefined" ? document : null;
 const templateContainer = doc && /* @__PURE__ */ doc.createElement("template");
@@ -4653,13 +4712,6 @@ const nodeOps = {
   querySelector: (selector) => doc.querySelector(selector),
   setScopeId(el, id) {
     el.setAttribute(id, "");
-  },
-  cloneNode(el) {
-    const cloned = el.cloneNode(true);
-    if (`_value` in el) {
-      cloned._value = el._value;
-    }
-    return cloned;
   },
   insertStaticContent(content, parent, anchor, isSVG, start, end) {
     const before = anchor ? anchor.previousSibling : parent.lastChild;
@@ -4730,7 +4782,7 @@ function patchStyle(el, prev, next) {
 }
 const importantRE = /\s*!important$/;
 function setStyle(style, name, val) {
-  if (isArray(val)) {
+  if (isArray$1(val)) {
     val.forEach((v) => setStyle(style, name, v));
   } else {
     if (val == null)
@@ -4873,7 +4925,8 @@ function parseName(name) {
       options[m[0].toLowerCase()] = true;
     }
   }
-  return [hyphenate(name.slice(2)), options];
+  const event = name[2] === ":" ? name.slice(3) : hyphenate(name.slice(2));
+  return [event, options];
 }
 function createInvoker(initialValue, instance) {
   const invoker = (e) => {
@@ -4887,7 +4940,7 @@ function createInvoker(initialValue, instance) {
   return invoker;
 }
 function patchStopImmediatePropagation(e, value) {
-  if (isArray(value)) {
+  if (isArray$1(value)) {
     const originalStop = e.stopImmediatePropagation;
     e.stopImmediatePropagation = () => {
       originalStop.call(e);
@@ -4972,7 +5025,7 @@ function normalizeContainer(container) {
   }
   return container;
 }
-var App_vue_vue_type_style_index_0_lang = /* @__PURE__ */ (() => "\n* {\n  margin: 0;\n  padding: 0;\n}\nhtml,\nbody {\n  height: 100vh;\n  width: 100%;\n}\n#app {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n")();
+var App_vue_vue_type_style_index_0_lang = "";
 var _export_sfc = (sfc, props) => {
   const target = sfc.__vccOpts || sfc;
   for (const [key, val] of props) {
@@ -5032,38 +5085,35 @@ const __vitePreload = function preload(baseModule, deps) {
   })).then(() => baseModule());
 };
 /*!
-  * vue-router v4.0.16
+  * vue-router v4.1.5
   * (c) 2022 Eduardo San Martin Morote
   * @license MIT
   */
-const hasSymbol = typeof Symbol === "function" && typeof Symbol.toStringTag === "symbol";
-const PolySymbol = (name) => hasSymbol ? Symbol(name) : "_vr_" + name;
-const matchedRouteKey = /* @__PURE__ */ PolySymbol("rvlm");
-const viewDepthKey = /* @__PURE__ */ PolySymbol("rvd");
-const routerKey = /* @__PURE__ */ PolySymbol("r");
-const routeLocationKey = /* @__PURE__ */ PolySymbol("rl");
-const routerViewLocationKey = /* @__PURE__ */ PolySymbol("rvl");
 const isBrowser = typeof window !== "undefined";
 function isESModule(obj) {
-  return obj.__esModule || hasSymbol && obj[Symbol.toStringTag] === "Module";
+  return obj.__esModule || obj[Symbol.toStringTag] === "Module";
 }
-const assign$1 = Object.assign;
+const assign = Object.assign;
 function applyToParams(fn, params) {
   const newParams = {};
   for (const key in params) {
     const value = params[key];
-    newParams[key] = Array.isArray(value) ? value.map(fn) : fn(value);
+    newParams[key] = isArray(value) ? value.map(fn) : fn(value);
   }
   return newParams;
 }
-const noop$1 = () => {
+const noop = () => {
 };
+const isArray = Array.isArray;
 const TRAILING_SLASH_RE = /\/$/;
 const removeTrailingSlash = (path) => path.replace(TRAILING_SLASH_RE, "");
 function parseURL(parseQuery2, location2, currentLocation = "/") {
   let path, query = {}, searchString = "", hash = "";
-  const searchPos = location2.indexOf("?");
-  const hashPos = location2.indexOf("#", searchPos > -1 ? searchPos : 0);
+  const hashPos = location2.indexOf("#");
+  let searchPos = location2.indexOf("?");
+  if (hashPos < searchPos && hashPos >= 0) {
+    searchPos = -1;
+  }
   if (searchPos > -1) {
     path = location2.slice(0, searchPos);
     searchString = location2.slice(searchPos + 1, hashPos > -1 ? hashPos : location2.length);
@@ -5108,10 +5158,10 @@ function isSameRouteLocationParams(a, b) {
   return true;
 }
 function isSameRouteLocationParamsValue(a, b) {
-  return Array.isArray(a) ? isEquivalentArray(a, b) : Array.isArray(b) ? isEquivalentArray(b, a) : a === b;
+  return isArray(a) ? isEquivalentArray(a, b) : isArray(b) ? isEquivalentArray(b, a) : a === b;
 }
 function isEquivalentArray(a, b) {
-  return Array.isArray(b) ? a.length === b.length && a.every((value, i) => value === b[i]) : a.length === 1 && a[0] === b;
+  return isArray(b) ? a.length === b.length && a.every((value, i) => value === b[i]) : a.length === 1 && a[0] === b;
 }
 function resolveRelativePath(to, from) {
   if (to.startsWith("/"))
@@ -5125,11 +5175,12 @@ function resolveRelativePath(to, from) {
   let segment;
   for (toPosition = 0; toPosition < toSegments.length; toPosition++) {
     segment = toSegments[toPosition];
-    if (position === 1 || segment === ".")
+    if (segment === ".")
       continue;
-    if (segment === "..")
-      position--;
-    else
+    if (segment === "..") {
+      if (position > 1)
+        position--;
+    } else
       break;
   }
   return fromSegments.slice(0, position).join("/") + "/" + toSegments.slice(toPosition - (toPosition === toSegments.length ? 1 : 0)).join("/");
@@ -5267,7 +5318,7 @@ function useHistoryListeners(base2, historyState, currentLocation, replace) {
     const { history: history2 } = window;
     if (!history2.state)
       return;
-    history2.replaceState(assign$1({}, history2.state, { scroll: computeScrollPosition() }), "");
+    history2.replaceState(assign({}, history2.state, { scroll: computeScrollPosition() }), "");
   }
   function destroy() {
     for (const teardown of teardowns)
@@ -5324,17 +5375,27 @@ function useHistoryStateNavigation(base2) {
     }
   }
   function replace(to, data) {
-    const state = assign$1({}, history2.state, buildState(historyState.value.back, to, historyState.value.forward, true), data, { position: historyState.value.position });
+    const state = assign({}, history2.state, buildState(
+      historyState.value.back,
+      to,
+      historyState.value.forward,
+      true
+    ), data, { position: historyState.value.position });
     changeLocation(to, state, true);
     currentLocation.value = to;
   }
   function push(to, data) {
-    const currentState = assign$1({}, historyState.value, history2.state, {
-      forward: to,
-      scroll: computeScrollPosition()
-    });
+    const currentState = assign(
+      {},
+      historyState.value,
+      history2.state,
+      {
+        forward: to,
+        scroll: computeScrollPosition()
+      }
+    );
     changeLocation(currentState.current, currentState, true);
-    const state = assign$1({}, buildState(currentLocation.value, to, null), { position: currentState.position + 1 }, data);
+    const state = assign({}, buildState(currentLocation.value, to, null), { position: currentState.position + 1 }, data);
     changeLocation(to, state, false);
     currentLocation.value = to;
   }
@@ -5354,7 +5415,7 @@ function createWebHistory(base2) {
       historyListeners.pauseListeners();
     history.go(delta);
   }
-  const routerHistory = assign$1({
+  const routerHistory = assign({
     location: "",
     base: base2,
     go,
@@ -5387,7 +5448,7 @@ const START_LOCATION_NORMALIZED = {
   meta: {},
   redirectedFrom: void 0
 };
-const NavigationFailureSymbol = /* @__PURE__ */ PolySymbol("nf");
+const NavigationFailureSymbol = Symbol("");
 var NavigationFailureType;
 (function(NavigationFailureType2) {
   NavigationFailureType2[NavigationFailureType2["aborted"] = 4] = "aborted";
@@ -5396,7 +5457,7 @@ var NavigationFailureType;
 })(NavigationFailureType || (NavigationFailureType = {}));
 function createRouterError(type, params) {
   {
-    return assign$1(new Error(), {
+    return assign(new Error(), {
       type,
       [NavigationFailureSymbol]: true
     }, params);
@@ -5414,7 +5475,7 @@ const BASE_PATH_PARSER_OPTIONS = {
 };
 const REGEX_CHARS_RE = /[.+*?^${}()[\]/\\]/g;
 function tokensToParser(segments, extraOptions) {
-  const options = assign$1({}, BASE_PATH_PARSER_OPTIONS, extraOptions);
+  const options = assign({}, BASE_PATH_PARSER_OPTIONS, extraOptions);
   const score = [];
   let pattern = options.start ? "^" : "";
   const keys = [];
@@ -5500,12 +5561,13 @@ function tokensToParser(segments, extraOptions) {
         } else if (token.type === 1) {
           const { value, repeatable, optional } = token;
           const param = value in params ? params[value] : "";
-          if (Array.isArray(param) && !repeatable)
+          if (isArray(param) && !repeatable) {
             throw new Error(`Provided param "${value}" is an array but it is not repeatable (* or + modifiers)`);
-          const text = Array.isArray(param) ? param.join("/") : param;
+          }
+          const text = isArray(param) ? param.join("/") : param;
           if (!text) {
             if (optional) {
-              if (segment.length < 2 && segments.length > 1) {
+              if (segment.length < 2) {
                 if (path.endsWith("/"))
                   path = path.slice(0, -1);
                 else
@@ -5518,7 +5580,7 @@ function tokensToParser(segments, extraOptions) {
         }
       }
     }
-    return path;
+    return path || "/";
   }
   return {
     re,
@@ -5687,7 +5749,7 @@ function tokenizePath(path) {
 }
 function createRouteRecordMatcher(record, parent, options) {
   const parser = tokensToParser(tokenizePath(record.path), options);
-  const matcher = assign$1(parser, {
+  const matcher = assign(parser, {
     record,
     parent,
     children: [],
@@ -5717,7 +5779,7 @@ function createRouterMatcher(routes2, globalOptions) {
     if ("alias" in record) {
       const aliases = typeof record.alias === "string" ? [record.alias] : record.alias;
       for (const alias of aliases) {
-        normalizedRecords.push(assign$1({}, mainNormalizedRecord, {
+        normalizedRecords.push(assign({}, mainNormalizedRecord, {
           components: originalRecord ? originalRecord.record.components : mainNormalizedRecord.components,
           path: alias,
           aliasOf: originalRecord ? originalRecord.record : mainNormalizedRecord
@@ -5743,7 +5805,7 @@ function createRouterMatcher(routes2, globalOptions) {
         if (isRootAdd && record.name && !isAliasRecord(matcher))
           removeRoute(record.name);
       }
-      if ("children" in mainNormalizedRecord) {
+      if (mainNormalizedRecord.children) {
         const children = mainNormalizedRecord.children;
         for (let i = 0; i < children.length; i++) {
           addRoute(children[i], matcher, originalRecord && originalRecord.children[i]);
@@ -5754,7 +5816,7 @@ function createRouterMatcher(routes2, globalOptions) {
     }
     return originalMatcher ? () => {
       removeRoute(originalMatcher);
-    } : noop$1;
+    } : noop;
   }
   function removeRoute(matcherRef) {
     if (isRouteName(matcherRef)) {
@@ -5799,7 +5861,13 @@ function createRouterMatcher(routes2, globalOptions) {
           location: location2
         });
       name = matcher.record.name;
-      params = assign$1(paramsFromLocation(currentLocation.params, matcher.keys.filter((k) => !k.optional).map((k) => k.name)), location2.params);
+      params = assign(
+        paramsFromLocation(
+          currentLocation.params,
+          matcher.keys.filter((k) => !k.optional).map((k) => k.name)
+        ),
+        location2.params && paramsFromLocation(location2.params, matcher.keys.map((k) => k.name))
+      );
       path = matcher.stringify(params);
     } else if ("path" in location2) {
       path = location2.path;
@@ -5816,7 +5884,7 @@ function createRouterMatcher(routes2, globalOptions) {
           currentLocation
         });
       name = matcher.record.name;
-      params = assign$1({}, currentLocation.params, location2.params);
+      params = assign({}, currentLocation.params, location2.params);
       path = matcher.stringify(params);
     }
     const matched = [];
@@ -5858,7 +5926,7 @@ function normalizeRouteRecord(record) {
     leaveGuards: /* @__PURE__ */ new Set(),
     updateGuards: /* @__PURE__ */ new Set(),
     enterCallbacks: {},
-    components: "components" in record ? record.components || {} : { default: record.component }
+    components: "components" in record ? record.components || null : record.component && { default: record.component }
   };
 }
 function normalizeRecordProps(record) {
@@ -5881,7 +5949,7 @@ function isAliasRecord(record) {
   return false;
 }
 function mergeMetaFields(matched) {
-  return matched.reduce((meta, record) => assign$1(meta, record.meta), {});
+  return matched.reduce((meta, record) => assign(meta, record.meta), {});
 }
 function mergeOptions(defaults, partialOptions) {
   const options = {};
@@ -5945,7 +6013,7 @@ function parseQuery(search) {
     const value = eqPos < 0 ? null : decode(searchParam.slice(eqPos + 1));
     if (key in query) {
       let currentValue = query[key];
-      if (!Array.isArray(currentValue)) {
+      if (!isArray(currentValue)) {
         currentValue = query[key] = [currentValue];
       }
       currentValue.push(value);
@@ -5966,7 +6034,7 @@ function stringifyQuery(query) {
       }
       continue;
     }
-    const values = Array.isArray(value) ? value.map((v) => v && encodeQueryValue(v)) : [value && encodeQueryValue(value)];
+    const values = isArray(value) ? value.map((v) => v && encodeQueryValue(v)) : [value && encodeQueryValue(value)];
     values.forEach((value2) => {
       if (value2 !== void 0) {
         search += (search.length ? "&" : "") + key;
@@ -5982,11 +6050,16 @@ function normalizeQuery(query) {
   for (const key in query) {
     const value = query[key];
     if (value !== void 0) {
-      normalizedQuery[key] = Array.isArray(value) ? value.map((v) => v == null ? null : "" + v) : value == null ? value : "" + value;
+      normalizedQuery[key] = isArray(value) ? value.map((v) => v == null ? null : "" + v) : value == null ? value : "" + value;
     }
   }
   return normalizedQuery;
 }
+const matchedRouteKey = Symbol("");
+const viewDepthKey = Symbol("");
+const routerKey = Symbol("");
+const routeLocationKey = Symbol("");
+const routerViewLocationKey = Symbol("");
 function useCallbacks() {
   let handlers = [];
   function add2(handler) {
@@ -6010,12 +6083,12 @@ function guardToPromiseFn(guard, to, from, record, name) {
   const enterCallbackArray = record && (record.enterCallbacks[name] = record.enterCallbacks[name] || []);
   return () => new Promise((resolve2, reject) => {
     const next = (valid) => {
-      if (valid === false)
+      if (valid === false) {
         reject(createRouterError(4, {
           from,
           to
         }));
-      else if (valid instanceof Error) {
+      } else if (valid instanceof Error) {
         reject(valid);
       } else if (isRouteLocation(valid)) {
         reject(createRouterError(2, {
@@ -6023,8 +6096,9 @@ function guardToPromiseFn(guard, to, from, record, name) {
           to: valid
         }));
       } else {
-        if (enterCallbackArray && record.enterCallbacks[name] === enterCallbackArray && typeof valid === "function")
+        if (enterCallbackArray && record.enterCallbacks[name] === enterCallbackArray && typeof valid === "function") {
           enterCallbackArray.push(valid);
+        }
         resolve2();
       }
     };
@@ -6086,7 +6160,9 @@ function useLink(props) {
   const isExactActive = computed(() => activeRecordIndex.value > -1 && activeRecordIndex.value === currentRoute.matched.length - 1 && isSameRouteLocationParams(currentRoute.params, route.value.params));
   function navigate(e = {}) {
     if (guardEvent(e)) {
-      return router2[unref(props.replace) ? "replace" : "push"](unref(props.to)).catch(noop$1);
+      return router2[unref(props.replace) ? "replace" : "push"](
+        unref(props.to)
+      ).catch(noop);
     }
     return Promise.resolve();
   }
@@ -6159,7 +6235,7 @@ function includesParams(outer, inner) {
       if (innerValue !== outerValue)
         return false;
     } else {
-      if (!Array.isArray(outerValue) || outerValue.length !== innerValue.length || innerValue.some((value, i) => value !== outerValue[i]))
+      if (!isArray(outerValue) || outerValue.length !== innerValue.length || innerValue.some((value, i) => value !== outerValue[i]))
         return false;
     }
   }
@@ -6183,9 +6259,18 @@ const RouterViewImpl = /* @__PURE__ */ defineComponent({
   setup(props, { attrs, slots }) {
     const injectedRoute = inject(routerViewLocationKey);
     const routeToDisplay = computed(() => props.route || injectedRoute.value);
-    const depth = inject(viewDepthKey, 0);
-    const matchedRouteRef = computed(() => routeToDisplay.value.matched[depth]);
-    provide(viewDepthKey, depth + 1);
+    const injectedDepth = inject(viewDepthKey, 0);
+    const depth = computed(() => {
+      let initialDepth = unref(injectedDepth);
+      const { matched } = routeToDisplay.value;
+      let matchedRoute;
+      while ((matchedRoute = matched[initialDepth]) && !matchedRoute.components) {
+        initialDepth++;
+      }
+      return initialDepth;
+    });
+    const matchedRouteRef = computed(() => routeToDisplay.value.matched[depth.value]);
+    provide(viewDepthKey, computed(() => depth.value + 1));
     provide(matchedRouteKey, matchedRouteRef);
     provide(routerViewLocationKey, routeToDisplay);
     const viewRef = ref();
@@ -6207,20 +6292,20 @@ const RouterViewImpl = /* @__PURE__ */ defineComponent({
     }, { flush: "post" });
     return () => {
       const route = routeToDisplay.value;
-      const matchedRoute = matchedRouteRef.value;
-      const ViewComponent = matchedRoute && matchedRoute.components[props.name];
       const currentName = props.name;
+      const matchedRoute = matchedRouteRef.value;
+      const ViewComponent = matchedRoute && matchedRoute.components[currentName];
       if (!ViewComponent) {
         return normalizeSlot(slots.default, { Component: ViewComponent, route });
       }
-      const routePropsOption = matchedRoute.props[props.name];
+      const routePropsOption = matchedRoute.props[currentName];
       const routeProps = routePropsOption ? routePropsOption === true ? route.params : typeof routePropsOption === "function" ? routePropsOption(route) : routePropsOption : null;
       const onVnodeUnmounted = (vnode) => {
         if (vnode.component.isUnmounted) {
           matchedRoute.instances[currentName] = null;
         }
       };
-      const component = h(ViewComponent, assign$1({}, routeProps, attrs, {
+      const component = h(ViewComponent, assign({}, routeProps, attrs, {
         onVnodeUnmounted,
         ref: viewRef
       }));
@@ -6275,12 +6360,12 @@ function createRouter$1(options) {
     return !!matcher.getRecordMatcher(name);
   }
   function resolve2(rawLocation, currentLocation) {
-    currentLocation = assign$1({}, currentLocation || currentRoute.value);
+    currentLocation = assign({}, currentLocation || currentRoute.value);
     if (typeof rawLocation === "string") {
       const locationNormalized = parseURL(parseQuery$1, rawLocation, currentLocation.path);
       const matchedRoute2 = matcher.resolve({ path: locationNormalized.path }, currentLocation);
       const href2 = routerHistory.createHref(locationNormalized.fullPath);
-      return assign$1(locationNormalized, matchedRoute2, {
+      return assign(locationNormalized, matchedRoute2, {
         params: decodeParams(matchedRoute2.params),
         hash: decode(locationNormalized.hash),
         redirectedFrom: void 0,
@@ -6289,17 +6374,17 @@ function createRouter$1(options) {
     }
     let matcherLocation;
     if ("path" in rawLocation) {
-      matcherLocation = assign$1({}, rawLocation, {
+      matcherLocation = assign({}, rawLocation, {
         path: parseURL(parseQuery$1, rawLocation.path, currentLocation.path).path
       });
     } else {
-      const targetParams = assign$1({}, rawLocation.params);
+      const targetParams = assign({}, rawLocation.params);
       for (const key in targetParams) {
         if (targetParams[key] == null) {
           delete targetParams[key];
         }
       }
-      matcherLocation = assign$1({}, rawLocation, {
+      matcherLocation = assign({}, rawLocation, {
         params: encodeParams(rawLocation.params)
       });
       currentLocation.params = encodeParams(currentLocation.params);
@@ -6307,12 +6392,12 @@ function createRouter$1(options) {
     const matchedRoute = matcher.resolve(matcherLocation, currentLocation);
     const hash = rawLocation.hash || "";
     matchedRoute.params = normalizeParams(decodeParams(matchedRoute.params));
-    const fullPath = stringifyURL(stringifyQuery$1, assign$1({}, rawLocation, {
+    const fullPath = stringifyURL(stringifyQuery$1, assign({}, rawLocation, {
       hash: encodeHash(hash),
       path: matchedRoute.path
     }));
     const href = routerHistory.createHref(fullPath);
-    return assign$1({
+    return assign({
       fullPath,
       hash,
       query: stringifyQuery$1 === stringifyQuery ? normalizeQuery(rawLocation.query) : rawLocation.query || {}
@@ -6322,7 +6407,7 @@ function createRouter$1(options) {
     });
   }
   function locationAsObject(to) {
-    return typeof to === "string" ? parseURL(parseQuery$1, to, currentRoute.value.path) : assign$1({}, to);
+    return typeof to === "string" ? parseURL(parseQuery$1, to, currentRoute.value.path) : assign({}, to);
   }
   function checkCanceledNavigation(to, from) {
     if (pendingLocation !== to) {
@@ -6336,7 +6421,7 @@ function createRouter$1(options) {
     return pushWithRedirect(to);
   }
   function replace(to) {
-    return push(assign$1(locationAsObject(to), { replace: true }));
+    return push(assign(locationAsObject(to), { replace: true }));
   }
   function handleRedirectRecord(to) {
     const lastMatched = to.matched[to.matched.length - 1];
@@ -6347,10 +6432,10 @@ function createRouter$1(options) {
         newTargetLocation = newTargetLocation.includes("?") || newTargetLocation.includes("#") ? newTargetLocation = locationAsObject(newTargetLocation) : { path: newTargetLocation };
         newTargetLocation.params = {};
       }
-      return assign$1({
+      return assign({
         query: to.query,
         hash: to.hash,
-        params: to.params
+        params: "path" in newTargetLocation ? {} : to.params
       }, newTargetLocation);
     }
   }
@@ -6362,26 +6447,38 @@ function createRouter$1(options) {
     const replace2 = to.replace === true;
     const shouldRedirect = handleRedirectRecord(targetLocation);
     if (shouldRedirect)
-      return pushWithRedirect(assign$1(locationAsObject(shouldRedirect), {
-        state: data,
-        force,
-        replace: replace2
-      }), redirectedFrom || targetLocation);
+      return pushWithRedirect(
+        assign(locationAsObject(shouldRedirect), {
+          state: typeof shouldRedirect === "object" ? assign({}, data, shouldRedirect.state) : data,
+          force,
+          replace: replace2
+        }),
+        redirectedFrom || targetLocation
+      );
     const toLocation = targetLocation;
     toLocation.redirectedFrom = redirectedFrom;
     let failure;
     if (!force && isSameRouteLocation(stringifyQuery$1, from, targetLocation)) {
       failure = createRouterError(16, { to: toLocation, from });
-      handleScroll(from, from, true, false);
+      handleScroll(
+        from,
+        from,
+        true,
+        false
+      );
     }
     return (failure ? Promise.resolve(failure) : navigate(toLocation, from)).catch((error) => isNavigationFailure(error) ? isNavigationFailure(error, 2) ? error : markAsReady(error) : triggerError(error, toLocation, from)).then((failure2) => {
       if (failure2) {
         if (isNavigationFailure(failure2, 2)) {
-          return pushWithRedirect(assign$1(locationAsObject(failure2.to), {
-            state: data,
-            force,
-            replace: replace2
-          }), redirectedFrom || toLocation);
+          return pushWithRedirect(
+            assign({
+              replace: replace2
+            }, locationAsObject(failure2.to), {
+              state: typeof failure2.to === "object" ? assign({}, data, failure2.to.state) : data,
+              force
+            }),
+            redirectedFrom || toLocation
+          );
         }
       } else {
         failure2 = finalizeNavigation(toLocation, from, true, replace2, data);
@@ -6425,7 +6522,7 @@ function createRouter$1(options) {
       guards = [];
       for (const record of to.matched) {
         if (record.beforeEnter && !from.matched.includes(record)) {
-          if (Array.isArray(record.beforeEnter)) {
+          if (isArray(record.beforeEnter)) {
             for (const beforeEnter of record.beforeEnter)
               guards.push(guardToPromiseFn(beforeEnter, to, from));
           } else {
@@ -6461,7 +6558,7 @@ function createRouter$1(options) {
     const state = !isBrowser ? {} : history.state;
     if (isPush) {
       if (replace2 || isFirstNavigation)
-        routerHistory.replace(toLocation.fullPath, assign$1({
+        routerHistory.replace(toLocation.fullPath, assign({
           scroll: isFirstNavigation && state && state.scroll
         }, data));
       else
@@ -6476,10 +6573,12 @@ function createRouter$1(options) {
     if (removeHistoryListener)
       return;
     removeHistoryListener = routerHistory.listen((to, _from, info) => {
+      if (!router2.listening)
+        return;
       const toLocation = resolve2(to);
       const shouldRedirect = handleRedirectRecord(toLocation);
       if (shouldRedirect) {
-        pushWithRedirect(assign$1(shouldRedirect, { replace: true }), toLocation).catch(noop$1);
+        pushWithRedirect(assign(shouldRedirect, { replace: true }), toLocation).catch(noop);
         return;
       }
       pendingLocation = toLocation;
@@ -6492,27 +6591,35 @@ function createRouter$1(options) {
           return error;
         }
         if (isNavigationFailure(error, 2)) {
-          pushWithRedirect(error.to, toLocation).then((failure) => {
+          pushWithRedirect(
+            error.to,
+            toLocation
+          ).then((failure) => {
             if (isNavigationFailure(failure, 4 | 16) && !info.delta && info.type === NavigationType.pop) {
               routerHistory.go(-1, false);
             }
-          }).catch(noop$1);
+          }).catch(noop);
           return Promise.reject();
         }
-        if (info.delta)
+        if (info.delta) {
           routerHistory.go(-info.delta, false);
+        }
         return triggerError(error, toLocation, from);
       }).then((failure) => {
-        failure = failure || finalizeNavigation(toLocation, from, false);
+        failure = failure || finalizeNavigation(
+          toLocation,
+          from,
+          false
+        );
         if (failure) {
-          if (info.delta) {
+          if (info.delta && !isNavigationFailure(failure, 8)) {
             routerHistory.go(-info.delta, false);
           } else if (info.type === NavigationType.pop && isNavigationFailure(failure, 4 | 16)) {
             routerHistory.go(-1, false);
           }
         }
         triggerAfterEach(toLocation, from, failure);
-      }).catch(noop$1);
+      }).catch(noop);
     });
   }
   let readyHandlers = useCallbacks();
@@ -6556,6 +6663,7 @@ function createRouter$1(options) {
   const installedApps = /* @__PURE__ */ new Set();
   const router2 = {
     currentRoute,
+    listening: true,
     addRoute,
     removeRoute,
     hasRoute,
@@ -6636,15 +6744,20 @@ function extractChangingRecords(to, from) {
   }
   return [leavingRecords, updatingRecords, enteringRecords];
 }
-const pages = { "./pages/api.vue": () => true ? __vitePreload(() => import("./api.0fff8833.js"), ["assets/api.0fff8833.js","assets/api.fe34861f.css"]) : null, "./pages/home.vue": () => true ? __vitePreload(() => import("./home.8db3f845.js"), ["assets/home.8db3f845.js","assets/home.0a857d6c.css"]) : null };
+const pages = { "./pages/image/bgcolor.vue": () => true ? __vitePreload(() => import("./bgcolor.8b36925d.js"), ["assets/bgcolor.8b36925d.js","assets/bgcolor.0f47a328.css"]) : null, "./pages/image/home.vue": () => true ? __vitePreload(() => import("./home.a0c9b17f.js"), ["assets/home.a0c9b17f.js","assets/home.f6d26501.css"]) : null };
 const routes = Object.keys(pages).map((path) => {
   const name = path.match(/\.\/pages(.*)\.vue$/)[1].toLowerCase();
   return {
-    path: name === "/home" ? "/" : name,
+    path: name === "/" ? "/image/home" : name,
     component: pages[path]
   };
 });
-const layoutPage = { "./layout/index.vue": () => true ? __vitePreload(() => import("./index.b0182f74.js"), ["assets/index.b0182f74.js","assets/index.fa856b78.css"]) : null };
+let home = routes.find((v) => v.path === "/image/home");
+routes.push({
+  path: "/",
+  component: home.component
+});
+const layoutPage = { "./layout/index.vue": () => true ? __vitePreload(() => import("./index.e9d8818c.js"), ["assets/index.e9d8818c.js","assets/index.fa856b78.css"]) : null };
 const layout = [
   {
     path: "/",
@@ -6660,16 +6773,11 @@ function createRouter() {
 }
 var isVue2 = false;
 /*!
-  * pinia v2.0.14
+  * pinia v2.0.22
   * (c) 2022 Eduardo San Martin Morote
   * @license MIT
   */
-let activePinia;
-const setActivePinia = (pinia) => activePinia = pinia;
 const piniaSymbol = Symbol();
-function isPlainObject(o) {
-  return o && typeof o === "object" && Object.prototype.toString.call(o) === "[object Object]" && typeof o.toJSON !== "function";
-}
 var MutationType;
 (function(MutationType2) {
   MutationType2["direct"] = "direct";
@@ -6683,7 +6791,6 @@ function createPinia() {
   let toBeInstalled = [];
   const pinia = markRaw({
     install(app2) {
-      setActivePinia(pinia);
       {
         pinia._a = app2;
         app2.provide(piniaSymbol, pinia);
@@ -6708,281 +6815,6 @@ function createPinia() {
   });
   return pinia;
 }
-const noop = () => {
-};
-function addSubscription(subscriptions, callback, detached, onCleanup = noop) {
-  subscriptions.push(callback);
-  const removeSubscription = () => {
-    const idx = subscriptions.indexOf(callback);
-    if (idx > -1) {
-      subscriptions.splice(idx, 1);
-      onCleanup();
-    }
-  };
-  if (!detached && getCurrentInstance()) {
-    onUnmounted(removeSubscription);
-  }
-  return removeSubscription;
-}
-function triggerSubscriptions(subscriptions, ...args) {
-  subscriptions.slice().forEach((callback) => {
-    callback(...args);
-  });
-}
-function mergeReactiveObjects(target, patchToApply) {
-  for (const key in patchToApply) {
-    if (!patchToApply.hasOwnProperty(key))
-      continue;
-    const subPatch = patchToApply[key];
-    const targetValue = target[key];
-    if (isPlainObject(targetValue) && isPlainObject(subPatch) && target.hasOwnProperty(key) && !isRef(subPatch) && !isReactive(subPatch)) {
-      target[key] = mergeReactiveObjects(targetValue, subPatch);
-    } else {
-      target[key] = subPatch;
-    }
-  }
-  return target;
-}
-const skipHydrateSymbol = Symbol();
-function shouldHydrate(obj) {
-  return !isPlainObject(obj) || !obj.hasOwnProperty(skipHydrateSymbol);
-}
-const { assign } = Object;
-function isComputed(o) {
-  return !!(isRef(o) && o.effect);
-}
-function createOptionsStore(id, options, pinia, hot) {
-  const { state, actions, getters } = options;
-  const initialState = pinia.state.value[id];
-  let store2;
-  function setup() {
-    if (!initialState && true) {
-      {
-        pinia.state.value[id] = state ? state() : {};
-      }
-    }
-    const localState = toRefs(pinia.state.value[id]);
-    return assign(localState, actions, Object.keys(getters || {}).reduce((computedGetters, name) => {
-      computedGetters[name] = markRaw(computed(() => {
-        setActivePinia(pinia);
-        const store3 = pinia._s.get(id);
-        return getters[name].call(store3, store3);
-      }));
-      return computedGetters;
-    }, {}));
-  }
-  store2 = createSetupStore(id, setup, options, pinia, hot, true);
-  store2.$reset = function $reset() {
-    const newState = state ? state() : {};
-    this.$patch(($state) => {
-      assign($state, newState);
-    });
-  };
-  return store2;
-}
-function createSetupStore($id, setup, options = {}, pinia, hot, isOptionsStore) {
-  let scope;
-  const optionsForPlugin = assign({ actions: {} }, options);
-  const $subscribeOptions = {
-    deep: true
-  };
-  let isListening;
-  let isSyncListening;
-  let subscriptions = markRaw([]);
-  let actionSubscriptions = markRaw([]);
-  let debuggerEvents;
-  const initialState = pinia.state.value[$id];
-  if (!isOptionsStore && !initialState && true) {
-    {
-      pinia.state.value[$id] = {};
-    }
-  }
-  ref({});
-  let activeListener;
-  function $patch(partialStateOrMutator) {
-    let subscriptionMutation;
-    isListening = isSyncListening = false;
-    if (typeof partialStateOrMutator === "function") {
-      partialStateOrMutator(pinia.state.value[$id]);
-      subscriptionMutation = {
-        type: MutationType.patchFunction,
-        storeId: $id,
-        events: debuggerEvents
-      };
-    } else {
-      mergeReactiveObjects(pinia.state.value[$id], partialStateOrMutator);
-      subscriptionMutation = {
-        type: MutationType.patchObject,
-        payload: partialStateOrMutator,
-        storeId: $id,
-        events: debuggerEvents
-      };
-    }
-    const myListenerId = activeListener = Symbol();
-    nextTick().then(() => {
-      if (activeListener === myListenerId) {
-        isListening = true;
-      }
-    });
-    isSyncListening = true;
-    triggerSubscriptions(subscriptions, subscriptionMutation, pinia.state.value[$id]);
-  }
-  const $reset = noop;
-  function $dispose() {
-    scope.stop();
-    subscriptions = [];
-    actionSubscriptions = [];
-    pinia._s.delete($id);
-  }
-  function wrapAction(name, action) {
-    return function() {
-      setActivePinia(pinia);
-      const args = Array.from(arguments);
-      const afterCallbackList = [];
-      const onErrorCallbackList = [];
-      function after(callback) {
-        afterCallbackList.push(callback);
-      }
-      function onError(callback) {
-        onErrorCallbackList.push(callback);
-      }
-      triggerSubscriptions(actionSubscriptions, {
-        args,
-        name,
-        store: store2,
-        after,
-        onError
-      });
-      let ret;
-      try {
-        ret = action.apply(this && this.$id === $id ? this : store2, args);
-      } catch (error) {
-        triggerSubscriptions(onErrorCallbackList, error);
-        throw error;
-      }
-      if (ret instanceof Promise) {
-        return ret.then((value) => {
-          triggerSubscriptions(afterCallbackList, value);
-          return value;
-        }).catch((error) => {
-          triggerSubscriptions(onErrorCallbackList, error);
-          return Promise.reject(error);
-        });
-      }
-      triggerSubscriptions(afterCallbackList, ret);
-      return ret;
-    };
-  }
-  const partialStore = {
-    _p: pinia,
-    $id,
-    $onAction: addSubscription.bind(null, actionSubscriptions),
-    $patch,
-    $reset,
-    $subscribe(callback, options2 = {}) {
-      const removeSubscription = addSubscription(subscriptions, callback, options2.detached, () => stopWatcher());
-      const stopWatcher = scope.run(() => watch(() => pinia.state.value[$id], (state) => {
-        if (options2.flush === "sync" ? isSyncListening : isListening) {
-          callback({
-            storeId: $id,
-            type: MutationType.direct,
-            events: debuggerEvents
-          }, state);
-        }
-      }, assign({}, $subscribeOptions, options2)));
-      return removeSubscription;
-    },
-    $dispose
-  };
-  const store2 = reactive(assign({}, partialStore));
-  pinia._s.set($id, store2);
-  const setupStore2 = pinia._e.run(() => {
-    scope = effectScope();
-    return scope.run(() => setup());
-  });
-  for (const key in setupStore2) {
-    const prop = setupStore2[key];
-    if (isRef(prop) && !isComputed(prop) || isReactive(prop)) {
-      if (!isOptionsStore) {
-        if (initialState && shouldHydrate(prop)) {
-          if (isRef(prop)) {
-            prop.value = initialState[key];
-          } else {
-            mergeReactiveObjects(prop, initialState[key]);
-          }
-        }
-        {
-          pinia.state.value[$id][key] = prop;
-        }
-      }
-    } else if (typeof prop === "function") {
-      const actionValue = wrapAction(key, prop);
-      {
-        setupStore2[key] = actionValue;
-      }
-      optionsForPlugin.actions[key] = prop;
-    } else
-      ;
-  }
-  {
-    assign(store2, setupStore2);
-    assign(toRaw(store2), setupStore2);
-  }
-  Object.defineProperty(store2, "$state", {
-    get: () => pinia.state.value[$id],
-    set: (state) => {
-      $patch(($state) => {
-        assign($state, state);
-      });
-    }
-  });
-  pinia._p.forEach((extender) => {
-    {
-      assign(store2, scope.run(() => extender({
-        store: store2,
-        app: pinia._a,
-        pinia,
-        options: optionsForPlugin
-      })));
-    }
-  });
-  if (initialState && isOptionsStore && options.hydrate) {
-    options.hydrate(store2.$state, initialState);
-  }
-  isListening = true;
-  isSyncListening = true;
-  return store2;
-}
-function defineStore(idOrOptions, setup, setupOptions) {
-  let id;
-  let options;
-  const isSetupStore = typeof setup === "function";
-  if (typeof idOrOptions === "string") {
-    id = idOrOptions;
-    options = isSetupStore ? setupOptions : setup;
-  } else {
-    options = idOrOptions;
-    id = idOrOptions.id;
-  }
-  function useStore(pinia, hot) {
-    const currentInstance2 = getCurrentInstance();
-    pinia = pinia || currentInstance2 && inject(piniaSymbol);
-    if (pinia)
-      setActivePinia(pinia);
-    pinia = activePinia;
-    if (!pinia._s.has(id)) {
-      if (isSetupStore) {
-        createSetupStore(id, setup, options, pinia);
-      } else {
-        createOptionsStore(id, options, pinia);
-      }
-    }
-    const store2 = pinia._s.get(id);
-    return store2;
-  }
-  useStore.$id = id;
-  return useStore;
-}
 const store$1 = createPinia();
 function setupStore(app2) {
   app2.use(store$1);
@@ -7001,4 +6833,4 @@ if (window && window.cache) {
 router.isReady().then(() => {
   app.mount("#app");
 });
-export { _export_sfc as _, defineComponent as a, createBaseVNode as b, createElementBlock as c, defineStore as d, ref as e, onServerPrefetch as f, onMounted as g, popScopeId as h, createCommentVNode as i, createTextVNode as j, resolveComponent as k, createVNode as l, normalizeStyle as n, openBlock as o, pushScopeId as p, reactive as r, toDisplayString as t };
+export { _export_sfc as _, createBaseVNode as a, createTextVNode as b, createElementBlock as c, defineComponent as d, createCommentVNode as e, reactive as f, onMounted as g, popScopeId as h, createVNode as i, resolveComponent as j, normalizeStyle as n, openBlock as o, pushScopeId as p, ref as r, toDisplayString as t };

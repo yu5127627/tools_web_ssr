@@ -6,14 +6,22 @@ import {
 
 // Auto generates routes from vue files under ./pages
 // https://vitejs.dev/guide/features.html#glob-import
-const pages = import.meta.glob('./pages/*.vue')
+const pages = import.meta.glob('./pages/*/*.vue')
 const routes = Object.keys(pages).map((path) => {
-  const name = path.match(/\.\/pages(.*)\.vue$/)[1].toLowerCase()
+  const name = path.match(/\.\/pages(.*)\.vue$/)[1].toLowerCase();
   return {
-    path: name === '/home' ? '/' : name,
+    path: name === '/' ? '/image/home' : name,
     component: pages[path] // () => import('./pages/*.vue')
   }
 })
+
+// 设置首页默认内容
+let home = routes.find(v => v.path === '/image/home');
+routes.push({
+  path: '/',
+  component: home.component
+})
+
 const layoutPage = import.meta.glob('./layout/*.vue');
 const layout = [
   {

@@ -1,5 +1,5 @@
-import { _ as _export_sfc, a as defineComponent, k as resolveComponent, o as openBlock, c as createElementBlock, l as createVNode, b as createBaseVNode, t as toDisplayString, p as pushScopeId, h as popScopeId } from "./index.aa43210e.js";
-var index_vue_vue_type_style_index_0_scoped_true_lang = /* @__PURE__ */ (() => ".layout[data-v-1626efcc] {\n  width: 1160px;\n  min-height: 100vh;\n}\n.layout .main-container[data-v-1626efcc] {\n  min-height: 100vh;\n}\n.layout .page-footer[data-v-1626efcc] {\n  width: 1160px;\n  margin: 100px 0 20px;\n}\n.layout .page-footer p[data-v-1626efcc],\n.layout .page-footer a[data-v-1626efcc] {\n  font-size: 14px;\n  line-height: 24px;\n  text-align: center;\n}\n")();
+import { _ as _export_sfc, d as defineComponent, o as openBlock, c as createElementBlock, i as createVNode, a as createBaseVNode, t as toDisplayString, j as resolveComponent, p as pushScopeId, h as popScopeId } from "./index.ca961b15.js";
+var index_vue_vue_type_style_index_0_scoped_true_lang = "";
 const _sfc_main = defineComponent({
   name: "Layout",
   setup() {

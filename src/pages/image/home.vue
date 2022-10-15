@@ -43,8 +43,8 @@
 
 <script lang='ts'>
 import { defineComponent, onMounted, reactive, ref } from 'vue';
-import DragElement from '../assets/js/dragElement.js';
-import { emitter } from '../assets/js/mitt.js';
+import DragElement from '../../assets/js/dragElement.js';
+import { emitter } from '../../assets/js/mitt.js';
 
 export default defineComponent({
   name: 'Home',

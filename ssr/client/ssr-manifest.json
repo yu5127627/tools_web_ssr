@@ -1,200 +1,68 @@
 {
   "vite/modulepreload-polyfill": [],
-  "node_modules/@vue/shared/dist/shared.esm-bundler.js": [],
-  "node_modules/@vue/reactivity/dist/reactivity.esm-bundler.js": [],
-  "node_modules/@vue/runtime-core/dist/runtime-core.esm-bundler.js": [],
-  "node_modules/@vue/runtime-dom/dist/runtime-dom.esm-bundler.js": [],
+  "node_modules/.pnpm/registry.npmmirror.com+@vue+shared@3.2.40/node_modules/@vue/shared/dist/shared.esm-bundler.js": [],
+  "node_modules/.pnpm/registry.npmmirror.com+@vue+reactivity@3.2.40/node_modules/@vue/reactivity/dist/reactivity.esm-bundler.js": [],
+  "node_modules/.pnpm/registry.npmmirror.com+@vue+runtime-core@3.2.40/node_modules/@vue/runtime-core/dist/runtime-core.esm-bundler.js": [],
+  "node_modules/.pnpm/registry.npmmirror.com+@vue+runtime-dom@3.2.40/node_modules/@vue/runtime-dom/dist/runtime-dom.esm-bundler.js": [],
   "src/App.vue?vue&type=style&index=0&lang.css": [],
   "plugin-vue:export-helper": [],
   "src/App.vue": [],
   "vite/preload-helper": [],
-  "node_modules/vue-router/dist/vue-router.esm-bundler.js": [],
+  "node_modules/.pnpm/registry.npmmirror.com+vue-router@4.1.5_vue@3.2.40/node_modules/vue-router/dist/vue-router.mjs": [],
   "src/router.js": [],
-  "node_modules/pinia/node_modules/vue-demi/lib/index.mjs": [],
-  "node_modules/pinia/dist/pinia.esm-browser.js": [],
+  "node_modules/.pnpm/registry.npmmirror.com+vue-demi@0.13.11_vue@3.2.40/node_modules/vue-demi/lib/index.mjs": [],
+  "node_modules/.pnpm/registry.npmmirror.com+pinia@2.0.22_vue@3.2.40/node_modules/pinia/dist/pinia.mjs": [],
   "src/store/index.js": [],
   "src/main.js": [],
   "src/entry-client.js": [],
   "index.html": [],
-  "api.0fff8833.js": [
-    "/assets/api.fe34861f.css"
+  "bgcolor.8b36925d.js": [
+    "/assets/bgcolor.0f47a328.css"
   ],
-  "home.8db3f845.js": [
-    "/assets/home.0a857d6c.css"
+  "home.a0c9b17f.js": [
+    "/assets/home.f6d26501.css"
   ],
-  "index.b0182f74.js": [
+  "index.e9d8818c.js": [
     "/assets/index.fa856b78.css"
   ],
-  "\u0000D:/ykn_project/server_project/tools_web_ssr/node_modules/axios/lib/axios.js?commonjs-module": [
-    "/assets/api.0fff8833.js",
-    "/assets/api.fe34861f.css"
+  "src/assets/js/updateBgcolor.js": [
+    "/assets/bgcolor.8b36925d.js",
+    "/assets/bgcolor.0f47a328.css"
   ],
-  "node_modules/axios/lib/helpers/bind.js": [
-    "/assets/api.0fff8833.js",
-    "/assets/api.fe34861f.css"
+  "src/pages/image/bgcolor.vue?vue&type=style&index=0&scoped=true&lang.less": [
+    "/assets/bgcolor.8b36925d.js",
+    "/assets/bgcolor.0f47a328.css"
   ],
-  "node_modules/axios/lib/utils.js": [
-    "/assets/api.0fff8833.js",
-    "/assets/api.fe34861f.css"
+  "src/pages/image/bgcolor.vue": [
+    "/assets/bgcolor.8b36925d.js",
+    "/assets/bgcolor.0f47a328.css"
   ],
-  "node_modules/axios/lib/helpers/buildURL.js": [
-    "/assets/api.0fff8833.js",
-    "/assets/api.fe34861f.css"
-  ],
-  "node_modules/axios/lib/core/InterceptorManager.js": [
-    "/assets/api.0fff8833.js",
-    "/assets/api.fe34861f.css"
-  ],
-  "node_modules/axios/lib/helpers/normalizeHeaderName.js": [
-    "/assets/api.0fff8833.js",
-    "/assets/api.fe34861f.css"
-  ],
-  "node_modules/axios/lib/core/AxiosError.js": [
-    "/assets/api.0fff8833.js",
-    "/assets/api.fe34861f.css"
-  ],
-  "node_modules/axios/lib/defaults/transitional.js": [
-    "/assets/api.0fff8833.js",
-    "/assets/api.fe34861f.css"
-  ],
-  "node_modules/axios/lib/helpers/toFormData.js": [
-    "/assets/api.0fff8833.js",
-    "/assets/api.fe34861f.css"
-  ],
-  "node_modules/axios/lib/core/settle.js": [
-    "/assets/api.0fff8833.js",
-    "/assets/api.fe34861f.css"
-  ],
-  "node_modules/axios/lib/helpers/cookies.js": [
-    "/assets/api.0fff8833.js",
-    "/assets/api.fe34861f.css"
-  ],
-  "node_modules/axios/lib/helpers/isAbsoluteURL.js": [
-    "/assets/api.0fff8833.js",
-    "/assets/api.fe34861f.css"
-  ],
-  "node_modules/axios/lib/helpers/combineURLs.js": [
-    "/assets/api.0fff8833.js",
-    "/assets/api.fe34861f.css"
-  ],
-  "node_modules/axios/lib/core/buildFullPath.js": [
-    "/assets/api.0fff8833.js",
-    "/assets/api.fe34861f.css"
-  ],
-  "node_modules/axios/lib/helpers/parseHeaders.js": [
-    "/assets/api.0fff8833.js",
-    "/assets/api.fe34861f.css"
-  ],
-  "node_modules/axios/lib/helpers/isURLSameOrigin.js": [
-    "/assets/api.0fff8833.js",
-    "/assets/api.fe34861f.css"
-  ],
-  "node_modules/axios/lib/cancel/CanceledError.js": [
-    "/assets/api.0fff8833.js",
-    "/assets/api.fe34861f.css"
-  ],
-  "node_modules/axios/lib/helpers/parseProtocol.js": [
-    "/assets/api.0fff8833.js",
-    "/assets/api.fe34861f.css"
-  ],
-  "node_modules/axios/lib/adapters/xhr.js": [
-    "/assets/api.0fff8833.js",
-    "/assets/api.fe34861f.css"
-  ],
-  "node_modules/axios/lib/helpers/null.js": [
-    "/assets/api.0fff8833.js",
-    "/assets/api.fe34861f.css"
-  ],
-  "node_modules/axios/lib/defaults/index.js": [
-    "/assets/api.0fff8833.js",
-    "/assets/api.fe34861f.css"
-  ],
-  "node_modules/axios/lib/core/transformData.js": [
-    "/assets/api.0fff8833.js",
-    "/assets/api.fe34861f.css"
-  ],
-  "node_modules/axios/lib/cancel/isCancel.js": [
-    "/assets/api.0fff8833.js",
-    "/assets/api.fe34861f.css"
-  ],
-  "node_modules/axios/lib/core/dispatchRequest.js": [
-    "/assets/api.0fff8833.js",
-    "/assets/api.fe34861f.css"
-  ],
-  "node_modules/axios/lib/core/mergeConfig.js": [
-    "/assets/api.0fff8833.js",
-    "/assets/api.fe34861f.css"
-  ],
-  "node_modules/axios/lib/env/data.js": [
-    "/assets/api.0fff8833.js",
-    "/assets/api.fe34861f.css"
-  ],
-  "node_modules/axios/lib/helpers/validator.js": [
-    "/assets/api.0fff8833.js",
-    "/assets/api.fe34861f.css"
-  ],
-  "node_modules/axios/lib/core/Axios.js": [
-    "/assets/api.0fff8833.js",
-    "/assets/api.fe34861f.css"
-  ],
-  "node_modules/axios/lib/cancel/CancelToken.js": [
-    "/assets/api.0fff8833.js",
-    "/assets/api.fe34861f.css"
-  ],
-  "node_modules/axios/lib/helpers/spread.js": [
-    "/assets/api.0fff8833.js",
-    "/assets/api.fe34861f.css"
-  ],
-  "node_modules/axios/lib/helpers/isAxiosError.js": [
-    "/assets/api.0fff8833.js",
-    "/assets/api.fe34861f.css"
-  ],
-  "node_modules/axios/lib/axios.js": [
-    "/assets/api.0fff8833.js",
-    "/assets/api.fe34861f.css"
-  ],
-  "node_modules/axios/index.js": [
-    "/assets/api.0fff8833.js",
-    "/assets/api.fe34861f.css"
-  ],
-  "src/store/modules/cache.js": [
-    "/assets/api.0fff8833.js",
-    "/assets/api.fe34861f.css"
-  ],
-  "src/pages/api.vue?vue&type=style&index=0&scoped=true&lang.less": [
-    "/assets/api.0fff8833.js",
-    "/assets/api.fe34861f.css"
-  ],
-  "src/pages/api.vue": [
-    "/assets/api.0fff8833.js",
-    "/assets/api.fe34861f.css"
-  ],
-  "node_modules/mitt/dist/mitt.mjs": [
-    "/assets/home.8db3f845.js",
-    "/assets/home.0a857d6c.css"
+  "node_modules/.pnpm/registry.npmmirror.com+mitt@3.0.0/node_modules/mitt/dist/mitt.mjs": [
+    "/assets/home.a0c9b17f.js",
+    "/assets/home.f6d26501.css"
   ],
   "src/assets/js/mitt.ts": [
-    "/assets/home.8db3f845.js",
-    "/assets/home.0a857d6c.css"
+    "/assets/home.a0c9b17f.js",
+    "/assets/home.f6d26501.css"
   ],
   "src/assets/js/dragElement.js": [
-    "/assets/home.8db3f845.js",
-    "/assets/home.0a857d6c.css"
+    "/assets/home.a0c9b17f.js",
+    "/assets/home.f6d26501.css"
   ],
-  "src/pages/home.vue?vue&type=style&index=0&scoped=true&lang.less": [
-    "/assets/home.8db3f845.js",
-    "/assets/home.0a857d6c.css"
+  "src/pages/image/home.vue?vue&type=style&index=0&scoped=true&lang.less": [
+    "/assets/home.a0c9b17f.js",
+    "/assets/home.f6d26501.css"
   ],
-  "src/pages/home.vue": [
-    "/assets/home.8db3f845.js",
-    "/assets/home.0a857d6c.css"
+  "src/pages/image/home.vue": [
+    "/assets/home.a0c9b17f.js",
+    "/assets/home.f6d26501.css"
   ],
   "src/layout/index.vue?vue&type=style&index=0&scoped=true&lang.less": [
-    "/assets/index.b0182f74.js",
+    "/assets/index.e9d8818c.js",
     "/assets/index.fa856b78.css"
   ],
   "src/layout/index.vue": [
-    "/assets/index.b0182f74.js",
+    "/assets/index.e9d8818c.js",
     "/assets/index.fa856b78.css"
   ]
 }
